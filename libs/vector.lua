@@ -125,22 +125,16 @@ end
 function v(x,y,z)
     return Vector(x,y,z)
 end
-function packVectorNicely(...)
-    local t = {}
-    local function vecTabToSimpleTab(tab)
-        for k,v in pairs(tab) do
-            if getmetatable(v) == vec then
-                t[#t+1] = v.x
-                t[#t+1] = v.y
-            end
+function vecTabToSimpleTab(tab)
+    for k,v in pairs(tab) do
+        if getmetatable(v) == vec then
+            t[#t+1] = v.x
+            t[#t+1] = v.y
         end
     end
-    
-    if #arg == 1 then
-        return vecTabToSimpleTab(arg[1])
-    else
-        vecTabToSimpleTab(arg)
-    end
+end
+function packVectorNicely(...)
+    return vecTabToSimpleTab(arg)
 end
 local tVec = Vector(1,1,0)
 local tVe2 = Vector(5,5,0)
