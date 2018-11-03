@@ -1,42 +1,72 @@
 function l.load()
     require "errorOverride"
+    --Override the default Love2D error handler
+    
     dt = 0
+    --Globalise the Delta Time passed from love.update
+    
     oldprint = print
-    lfs = "love.main"
-    g = {}
-    e = {print = {}, console = false, consoleTyping = false, consoleText = {}, consoleLine = 0, font = love.graphics.newFont(12)}
+    --Transport print to a different function as we want to hook into it
+    
     function print(s)
+        --We're making our own print function so it hooks into the console
         if s == nil then s = "nil" end
         if type(s) ~= "string" then s = tostring(s) end
+        --Some simple input sanitisation 
+        local strn = '['..os.date("%H%M%S")..']['..lfs..'] : '..s
+        oldprint(strn)
+        --Do a classic print
         
-        oldprint('['..lfs..'] : '..s.."\t")
-        --if not debug then return false end
-        e.print[#e.print+1] = {'['..lfs..'] : '..s.."\t"}
+        e.print[#e.print+1] = {strn}
+        --Add the print to the print array
     end
-    libraries = {}
-    libraries[1] = {
-        "math",
-        "vector",
-        "serial"
+    lfs = "love.main"
+    --[[
+        Last File String, for tracking where a print comes from.
+        Sadly Lua doesn't allow for a dynamic method of doing this
+        so it has to be set manually.
+        love.<filename> for anything in the root folder
+        <folderName>.<filename> for anything in child folders 
+    ]]--
+    
+    e = {
+        print = {}, 
+        console = false, 
+        consoleTyping = false, 
+        consoleText = {}, 
+        consoleLine = 0, 
+        font = love.graphics.newFont(12),
+        libraries = {
+            {
+                "math",
+                "vector",
+                "serial"
+            },{
+                "string",
+                "table",
+                "class",
+                "timer"
+            },{
+                "map"
+            --    "main"
+            },{
+                "loveVec",
+                "assets"
+            --    "keypress",
+            --    "ui"
+            }
+        }
     }
-    libraries[2] = {
-        "string",
-        "table",
-        "class",
-        "timer"
-    }
-    libraries[3] = {
-        "map"
-    --    "main"
-    }
-    libraries[4] = {
-        "loveVec",
-        "assets"
-    --    "keypress",
-    --    "ui"
-    }
+    --This is the engine table, all functions should go here.
+    --Also functions as a lookup table for the game table
+    --Allowing for me to be lazy.
+    
+    g = setmetatable({}, {__index = e})
+    --This is the game table, any game specific data goes here.
+    --Only data, no functions.
+    
     function reloadLibraries()
-        for k,v in pairs(libraries) do
+        for k,v in pairs(e.libraries) do
             for n,b in pairs(v) do
                 
                 local st = l.timer.getTime()
@@ -57,7 +87,11 @@ function l.load()
     end
     
     reloadLibraries()
+    --A function for loading and reloading the default libraries
+    
     g.vp = Vector(0,0)
+    --Has to be set after the vector library is loaded or bad you'll have a bad day
+    
     function drawque()
         for k,v in pairs(draw.drawque) do
             if type(v) ~= "function" and drawqueIndexBlacklist[k] == nil then
@@ -74,8 +108,11 @@ function l.load()
             end
         end
     end
+    --Simple draw que function, allows for dynamically adding items to a draw que
     
     draw = {drawque = setmetatable({}, {__call = drawque})}
+    --Black magic metatable voodoo
+    
     drawqueIndexBlacklist = {}
     
     draw.drawque["e_console"] = function(dt)
@@ -116,10 +153,12 @@ function l.load()
             love.graphics.print(strn, v(11,11), 0, v(1,1))
         end
     end
+    --Console drawing
     
     love.graphics.setBackgroundColor(180,215,245)
     g.mspeed = 10
     seed = string.toSeed("a")
+    --Misc stuff
 end
 
 function l.draw()
