@@ -13,7 +13,7 @@ function l.load()
         if s == nil then s = "nil" end
         if type(s) ~= "string" then s = tostring(s) end
         --Some simple input sanitisation 
-        local strn = '['..os.date("%H%M%S")..']['..lfs..'] : '..s
+        local strn = '['..os.date("%H:%M:%S")..']['..lfs..'] : '..s
         oldprint(strn)
         --Do a classic print
         
