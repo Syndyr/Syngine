@@ -85,7 +85,7 @@ function vecDef:dist(b)
     end
     return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2)
 end
-function vecDef:printable()
+function vecDef:toString()
     str = "vector: [x="..self["x"]..", y="..self["y"]..", z="..self["z"].."]"
     return str
 end

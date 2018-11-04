@@ -1,10 +1,3 @@
-print("Defining table.count function.")
-function table.count(table) 
-	if table ~= nil then
-		return #table
-	end
-	return 0
-end
 print("Defining table.copy function.")
 function table.copy(orig)
     local orig_type = type(orig)
