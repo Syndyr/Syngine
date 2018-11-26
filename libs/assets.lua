@@ -6,11 +6,18 @@ end
 
 assets = setmetatable(assets, {
     __newindex = function(self, k, v)
-        local filepath = "assets/"..k..".png"
+        if v.type == "image" then
+            local filepath = "assets/"..k..".png"
+
+            if v.filename ~= nil then filepath = "assets/"..k.."/"..v.filename..".png" end
+            v.image = love.graphics.newImage(filepath)
+        elseif v.type == "audio" then
             
-        if v.filename ~= nil then filepath = "assets/"..k.."/"..v.filename..".png" end
-        v.image = love.graphics.newImage(filepath)
-            
+        elseif v.type == "map" then
+                
+        elseif v.type == "save" then
+                
+        end
         rawset(self, k, v)
     end
 })
