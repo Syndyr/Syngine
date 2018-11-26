@@ -61,7 +61,9 @@ function l.load()
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
     
-    g = setmetatable({}, {__index = e})
+    g = setmetatable({ 
+        mspeed = 10
+    }, {__index = e})
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
     
@@ -156,7 +158,6 @@ function l.load()
     --Console drawing
     
     love.graphics.setBackgroundColor(180,215,245)
-    g.mspeed = 10
     seed = string.toSeed("a")
     --Misc stuff
 end
@@ -207,11 +208,11 @@ function l.keyreleased( key, unicode )
 end
 
 function l.mousepressed( x, y, button )
-    if button == "wu" then
+    if button == "wd" then
         if (e.consoleLine + 1) >  (#e.print - 10) then return false end
         e.consoleLine = e.consoleLine + 1
     end
-    if button == "wd" then
+    if button == "wu" then
         if e.consoleLine - 1 < 0 then return false end
         e.consoleLine = e.consoleLine - 1
     end
