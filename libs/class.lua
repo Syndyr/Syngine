@@ -18,10 +18,12 @@ function e.class.getBase(domain, base)
     print("Getting base.. "..baseName)
     if e.class.bases[baseName] == nil then
         local aNewBase = setmetatable(require(domain..".classes.bases."..base), e.class.__superClass)
-        e.class.bases[baseName] = aNewBase
         if aNewBase.base ~= nil then 
-            aNewbase = aNewbase + e.class.getBase(aNewBase.base)
+            local doma = aNewBase.base:sub(1,1)
+            aNewbase = aNewbase + e.class.getBase(doma, aNewBase.base)
         end
+        e.class.bases[baseName] = aNewBase
+        
         return e.class.bases[baseName]
     else
         return e.class.bases[baseName]
@@ -36,7 +38,8 @@ function e.class.getClass(name, domain, tab)
     local aNewClass = tab
     if tab.base ~= nil then base = tab.base end
     if e.class.classes[className] == nil then
-        aNewClass = aNewClass + e.class.getBase(base)
+        local domain = base:sub(1,1)
+        aNewClass = aNewClass + e.class.getBase(domain, base)
         e.class.classes[className] = aNewClass
     else
         return e.class.classes[className]
