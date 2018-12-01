@@ -6,5 +6,6 @@ image.type = "image"
 image.tile = true
 image.alpha = false
 image.trims = "standard"
+image.base = "e_image"
 
 return image
