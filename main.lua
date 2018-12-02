@@ -35,6 +35,8 @@ function l.load()
         consoleTyping = false, 
         consoleText = {}, 
         consoleLine = 0, 
+        
+        dt = 0,
         font = love.graphics.newFont(12),
         libraries = {
             {
@@ -44,6 +46,7 @@ function l.load()
             },{
                 "string",
                 "table",
+                "hook",
                 "class",
                 "timer"
             },{
@@ -94,8 +97,8 @@ function l.load()
     g.vp = Vector(0,0)
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
-    function drawque()
-        for k,v in pairs(draw.drawque) do
+    function e.drawque()
+        for k,v in pairs(e.draw.drawque) do
             if type(v) ~= "function" and drawqueIndexBlacklist[k] == nil then
                 
                 print("Attempted to draw a non function object via drawquee")
@@ -111,13 +114,15 @@ function l.load()
         end
     end
     --Simple draw que function, allows for dynamically adding items to a draw que
+    e.hook:add("draw", "drawque", e.drawque)
+    e.hook:add("update", "timerrt", s.timerRT)
     
-    draw = {drawque = setmetatable({}, {__call = drawque})}
+    e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     --Black magic metatable voodoo
     
     drawqueIndexBlacklist = {}
     
-    draw.drawque["e_console"] = function(dt)
+    e.draw.drawque["e_console"] = function(dt)
         if e.console then
             
             local I = 0
@@ -163,13 +168,13 @@ function l.load()
 end
 
 function l.draw()
-    draw.drawque()
-    s.timerRT(dt)
+    --draw.drawque()
+    e.hook:run("draw")
 end
 
 function l.update(dt)
-    dt = dt
-    s.timerRT()
+    e.dt = dt
+    e.hook:run("update", dt)
     if love.keyboard.isDown("s") then g.vp.y = g.vp.y-(g.mspeed*dt) end
     if love.keyboard.isDown("d") then g.vp.x = g.vp.x-(g.mspeed*dt) end
     if love.keyboard.isDown("w") then g.vp.y = g.vp.y+(g.mspeed*dt) end
