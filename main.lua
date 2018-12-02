@@ -35,6 +35,8 @@ function l.load()
         consoleTyping = false, 
         consoleText = {}, 
         consoleLine = 0, 
+        
+        dt = 0,
         font = love.graphics.newFont(12),
         libraries = {
             {
@@ -44,6 +46,7 @@ function l.load()
             },{
                 "string",
                 "table",
+                "hook",
                 "class",
                 "timer"
             },{
@@ -61,7 +64,9 @@ function l.load()
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
     
-    g = setmetatable({}, {__index = e})
+    g = setmetatable({ 
+        mspeed = 10
+    }, {__index = e})
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
     
@@ -92,8 +97,8 @@ function l.load()
     g.vp = Vector(0,0)
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
-    function drawque()
-        for k,v in pairs(draw.drawque) do
+    function e.drawque()
+        for k,v in pairs(e.draw.drawque) do
             if type(v) ~= "function" and drawqueIndexBlacklist[k] == nil then
                 
                 print("Attempted to draw a non function object via drawquee")
@@ -109,13 +114,15 @@ function l.load()
         end
     end
     --Simple draw que function, allows for dynamically adding items to a draw que
+    e.hook:add("draw", "drawque", e.drawque)
+    e.hook:add("update", "timerrt", s.timerRT)
     
-    draw = {drawque = setmetatable({}, {__call = drawque})}
+    e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     --Black magic metatable voodoo
     
     drawqueIndexBlacklist = {}
     
-    draw.drawque["e_console"] = function(dt)
+    e.draw.drawque["e_console"] = function(dt)
         if e.console then
             
             local I = 0
@@ -156,19 +163,18 @@ function l.load()
     --Console drawing
     
     love.graphics.setBackgroundColor(180,215,245)
-    g.mspeed = 10
     seed = string.toSeed("a")
     --Misc stuff
 end
 
 function l.draw()
-    draw.drawque()
-    s.timerRT(dt)
+    --draw.drawque()
+    e.hook:run("draw")
 end
 
 function l.update(dt)
-    dt = dt
-    s.timerRT()
+    e.dt = dt
+    e.hook:run("update", dt)
     if love.keyboard.isDown("s") then g.vp.y = g.vp.y-(g.mspeed*dt) end
     if love.keyboard.isDown("d") then g.vp.x = g.vp.x-(g.mspeed*dt) end
     if love.keyboard.isDown("w") then g.vp.y = g.vp.y+(g.mspeed*dt) end
@@ -207,11 +213,11 @@ function l.keyreleased( key, unicode )
 end
 
 function l.mousepressed( x, y, button )
-    if button == "wu" then
+    if button == "wd" then
         if (e.consoleLine + 1) >  (#e.print - 10) then return false end
         e.consoleLine = e.consoleLine + 1
     end
-    if button == "wd" then
+    if button == "wu" then
         if e.consoleLine - 1 < 0 then return false end
         e.consoleLine = e.consoleLine - 1
     end

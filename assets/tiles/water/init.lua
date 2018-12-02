@@ -2,6 +2,7 @@ local image = {}
 
 image.filename = "water"
 image.name = "watersheet"
+image.type = "image"
 image.tile = false
 image.alpha = true
 image.trims = "none"
