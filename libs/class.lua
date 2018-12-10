@@ -3,24 +3,44 @@ e.class = {
     classes = {},
     __superClass = {
         __add = function(a, b)
-            local c = a
-            for k,v in pairs(a) do
-                if b[k] ~= nil then
-                    c[k] = b[k]
-                end
-            end
-            return c
+            
+            if a == nil or b == nil then return false end
+            return e.class.mergWith(a, b)
+            
         end
     }
 }
+
+function e.class.mergWith(aTable, selfa)
+    local newTable = table.copy(selfa)
+    if newTable == nil or selfa == nil then 
+        return {}
+    end
+    for k,v in pairs(aTable) do
+        if newTable[k] ~= nil or newTable[k] ~= v then
+            newTable[k] = v
+        end
+    end
+    return newTable
+end
 function e.class.getBase(domain, base)
+    if domain == "e" then 
+        domain = "engine" 
+    elseif domain == "g" then 
+        domain = "game" 
+    end
     local baseName = domain:sub(1,1).."_"..base
+    
     print("Getting base.. "..baseName)
+    
     if e.class.bases[baseName] == nil then
         local aNewBase = setmetatable(require(domain..".classes.bases."..base), e.class.__superClass)
-        if aNewBase.base ~= nil then 
-            local doma = aNewBase.base:sub(1,1)
-            aNewbase = aNewbase + e.class.getBase(doma, aNewBase.base)
+        if aNewBase.base ~= nil then
+            local newDomain = aNewBase.base:sub(1,1)
+            local newBaseName = aNewBase.base:sub(3)
+            print("BASE REQUESTED "..aNewBase.base.." FROM "..domain:sub(1,1).."_"..base)
+            local aNewerBase = e.class.getBase(newDomain, newBaseName)
+            aNewBase = e.class.mergWith(aNewerBase, aNewBase)
         end
         e.class.bases[baseName] = aNewBase
         
@@ -28,23 +48,9 @@ function e.class.getBase(domain, base)
     else
         return e.class.bases[baseName]
     end
-end
-function e.class.getClass(name, domain, tab)
-    if tab == nil then 
-        tab =  setmetatable(require(domain..".classes.bases."..base), e.class.__superClass)
-    end
-    local className = domain:sub(1,1).."_"..base
-    local base = "e_base"
-    local aNewClass = tab
-    if tab.base ~= nil then base = tab.base end
-    if e.class.classes[className] == nil then
-        local domain = base:sub(1,1)
-        aNewClass = aNewClass + e.class.getBase(domain, base)
-        e.class.classes[className] = aNewClass
-    else
-        return e.class.classes[className]
-    end
-    return e.class.classes[className]
+    error("NO BASE FOUND FOR "..baseName)
 end
 
+--e.class.getBase("engine", "base")
+e.class.getBase("engine", "image")
 class = setmetatable({}, { __index = e.class})

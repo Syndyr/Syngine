@@ -1,15 +1,30 @@
-e.assets = {}
+e.asset = { assets = {} }
 
-function e.assets.load(folder)
+function e.asset:load(folder)
     --e.assets[folder] = require("assets/"..folder)
-    --local ass = setmetatable(require("assets/"..folder), class.__superClass)
-    --local classy = class.getClass()
+    local base = {}
+    local ass = setmetatable(require("assets/"..folder), class.__superClass)
     
+    
+    
+    if ass.type == "image" then
+        base = class.getBase("engine", "image")
+        ass = base+ass
+        ass.image = love.graphics.newImage("assets/"..folder.."/"..ass.filename..".png")
+    elseif ass.type == "audio" then
+        base = class.getBase("engine", "audio")
+    elseif ass.type == "map" then
+        base = class.getBase("engine", "map")
+    elseif ass.type == "save" then
+        base = class.getBase("engine", "save")
+    end
+    self.assets[ass.name] = ass
 end
 
---[[
-assets.load("tiles/forestFloor")
-assets.load("tiles/grass")
-assets.load("tiles/rock")
-assets.load("tiles/water")
-]]--
+
+--e.asset:load("tiles/forestFloor")
+--e.asset:load("tiles/grass")
+--e.asset:load("tiles/rock")
+--e.asset:load("tiles/water")
+print(Tserial.pack(e.class, true, true))
+print(Tserial.pack(e.asset.assets, true, true))

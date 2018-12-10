@@ -42,10 +42,10 @@ function l.load()
             {
                 "math",
                 "vector",
+                "table",
                 "serial"
             },{
                 "string",
-                "table",
                 "hook",
                 "class",
                 "timer"
