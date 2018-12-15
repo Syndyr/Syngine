@@ -49,33 +49,6 @@ function l.load()
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
     
-    --[[
-    function e.reloadLibraries()
-        local startTime = love.timer.getTime()*1000
-        for k,v in pairs(e.manifest.libraries) do
-            for n,b in pairs(v) do
-                
-                local st = l.timer.getTime()
-                
-                print("Impoting library : ".."libs."..b.."....")
-                
-                lfs = "libs."..b
-                
-                require("libs."..b)
-                
-                lfs = "love.main"
-                
-                print("Done ("..math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
-                print("----------")
-                print("")
-            end
-        end
-        print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
-    end
-    
-    e.reloadLibraries()
-    ]]--
-    
     function e.loadItemsFromManifest()
         local startTime = love.timer.getTime()*1000
         for k,v in pairs(e.manifest.libraries) do
