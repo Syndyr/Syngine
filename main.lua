@@ -2,10 +2,22 @@ function l.load()
     require "errorOverride"
     --Override the default Love2D error handler
     
-    dt = 0
-    --Globalise the Delta Time passed from love.update
+    e = {
+        print = {}, 
+        console = false, 
+        consoleTyping = false, 
+        consoleText = {}, 
+        consoleLine = 0, 
+        
+        dt = 0,
+        font = love.graphics.newFont(12),
+        manifest = require "engine.manifest"
+    }
+    --This is the engine table, all functions should go here.
+    --Also functions as a lookup table for the game table
+    --Allowing for me to be lazy.
     
-    oldprint = print
+    e.oldprint = print
     --Transport print to a different function as we want to hook into it
     
     function print(s)
@@ -14,7 +26,7 @@ function l.load()
         if type(s) ~= "string" then s = tostring(s) end
         --Some simple input sanitisation 
         local strn = '['..os.date("%H:%M:%S")..']['..lfs..'] : '..s
-        oldprint(strn)
+        e.oldprint(strn)
         --Do a classic print
         
         e.print[#e.print+1] = {strn}
@@ -29,40 +41,7 @@ function l.load()
         <folderName>.<filename> for anything in child folders 
     ]]--
     
-    e = {
-        print = {}, 
-        console = false, 
-        consoleTyping = false, 
-        consoleText = {}, 
-        consoleLine = 0, 
-        
-        dt = 0,
-        font = love.graphics.newFont(12),
-        libraries = {
-            {
-                "math",
-                "vector",
-                "table",
-                "serial"
-            },{
-                "string",
-                "hook",
-                "class",
-                "timer"
-            },{
-                "map"
-            --    "main"
-            },{
-                "loveVec",
-                "assets"
-            --    "keypress",
-            --    "ui"
-            }
-        }
-    }
-    --This is the engine table, all functions should go here.
-    --Also functions as a lookup table for the game table
-    --Allowing for me to be lazy.
+    
     
     g = setmetatable({ 
         mspeed = 10
@@ -70,8 +49,10 @@ function l.load()
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
     
-    function reloadLibraries()
-        for k,v in pairs(e.libraries) do
+    --[[
+    function e.reloadLibraries()
+        local startTime = love.timer.getTime()*1000
+        for k,v in pairs(e.manifest.libraries) do
             for n,b in pairs(v) do
                 
                 local st = l.timer.getTime()
@@ -89,24 +70,53 @@ function l.load()
                 print("")
             end
         end
+        print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
     end
     
-    reloadLibraries()
-    --A function for loading and reloading the default libraries
+    e.reloadLibraries()
+    ]]--
+    
+    function e.loadItemsFromManifest()
+        local startTime = love.timer.getTime()*1000
+        for k,v in pairs(e.manifest.libraries) do
+            for n,b in pairs(v) do
+                
+                local st = l.timer.getTime()
+                
+                print("Impoting library : ".."libs."..b.."....")
+                
+                lfs = "libs."..b
+                
+                require("libs."..b)
+                
+                lfs = "love.main"
+                
+                print("Done ("..math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
+                print("----------")
+                print("")
+            end
+        end
+        for k,v in pairs(e.manifest.bases) do
+            e.class.getBase(v[1], v[2])
+        end
+        print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
+    end
+    
+    e.loadItemsFromManifest()
     
     g.vp = Vector(0,0)
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
     function e.drawque()
         for k,v in pairs(e.draw.drawque) do
-            if type(v) ~= "function" and drawqueIndexBlacklist[k] == nil then
+            if type(v) ~= "function" and e.drawqueIndexBlacklist[k] == nil then
                 
                 print("Attempted to draw a non function object via drawquee")
                 print(k..[["]]..type(v)..[["]])
                 print("Item added to the Index Blacklist.")
-                drawqueIndexBlacklist[k] = true
+                e.drawqueIndexBlacklist[k] = true
             else
-                if drawqueIndexBlacklist[k] == nil then
+                if e.drawqueIndexBlacklist[k] == nil then
                     
                     v(dt)
                 end
@@ -120,7 +130,7 @@ function l.load()
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     --Black magic metatable voodoo
     
-    drawqueIndexBlacklist = {}
+    e.drawqueIndexBlacklist = {}
     
     e.draw.drawque["e_console"] = function(dt)
         if e.console then
@@ -147,7 +157,7 @@ function l.load()
             love.graphics.print(context, v(11,yOff+43), 0, v(1,1))
             
             love.graphics.setColor({255,255,255,128})
-            olLine(
+            e.olLine(
                 {
                     0, yOff+30, 
                     99999, yOff+30
