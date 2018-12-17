@@ -1,5 +1,5 @@
 print("Defining math.bearing.")
-function math.bearing(a,b)
+function e.math.bearing(a,b)
     
     if a ~= nil and b ~= nil then
         if type(a) == "table" and type(b) == "table" then
@@ -19,7 +19,7 @@ end
 
 print("Defining math.round.")
 
-function math.round(val, decimal)
+function e.math.round(val, decimal)
     
     local exp = decimal and 10^decimal or 1
     
