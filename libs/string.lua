@@ -1,5 +1,5 @@
 print("Defining string.explode function.")
-function string.explode(stack, needle)
+function e.string.explode(stack, needle)
 
 	if needle == nil then
 	
@@ -18,7 +18,7 @@ function string.explode(stack, needle)
 	
 end
 
-function string.toSeed(s)
+function e.string.toSeed(s)
     local trans = {
         ["0"] = 100,
         ["1"] = 1,
