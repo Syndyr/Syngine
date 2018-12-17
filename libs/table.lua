@@ -1,5 +1,5 @@
 print("Defining table.copy function.")
-function table.copy(orig)
+function e.table.copy(orig)
     local orig_type = type(orig)
     local copy
     if orig_type == 'table' then
