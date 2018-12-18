@@ -1,4 +1,4 @@
-function l.load()
+function love.load()
     require "errorOverride"
     --Override the default Love2D error handler
     
@@ -78,6 +78,7 @@ function l.load()
     e.loadItemsFromManifest()
     
     g.vp = Vector(0,0)
+    e.vpBounds = love.window.getDimensions()
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
     function e.drawque()
@@ -98,7 +99,6 @@ function l.load()
     end
     --Simple draw que function, allows for dynamically adding items to a draw que
     e.hook:add("draw", "drawque", e.drawque)
-    e.hook:add("update", "timerrt", s.timerRT)
     
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     --Black magic metatable voodoo
@@ -133,7 +133,7 @@ function l.load()
             e.olLine(
                 {
                     0, yOff+30, 
-                    99999, yOff+30
+                    g.vpBounds.x, yOff+30
                 }
             )
             
@@ -150,21 +150,27 @@ function l.load()
     --Misc stuff
 end
 
-function l.draw()
+function love.resize(x,y)
+    g.vpBounds.x = x
+    g.vpBounds.y = y
+end
+
+function love.draw()
     --draw.drawque()
     e.hook:run("draw")
 end
 
-function l.update(dt)
+function love.update(dt)
     e.dt = dt
     e.hook:run("update", dt)
+    e.timer:run()
     if love.keyboard.isDown("s") then g.vp.y = g.vp.y-(g.mspeed*dt) end
     if love.keyboard.isDown("d") then g.vp.x = g.vp.x-(g.mspeed*dt) end
     if love.keyboard.isDown("w") then g.vp.y = g.vp.y+(g.mspeed*dt) end
     if love.keyboard.isDown("a") then g.vp.x = g.vp.x+(g.mspeed*dt) end
 end
 
-function l.focus(bool)
+function love.focus(bool)
 end
 
 function love.textinput(t)
@@ -173,7 +179,7 @@ function love.textinput(t)
     end
 end
 
-function l.keypressed( key, unicode )
+function love.keypressed( key, unicode )
     if e.console then 
         if key == "return" then
             local func = loadstring(table.concat(e.consoleText)) or function() print("???") end
@@ -191,11 +197,11 @@ function l.keypressed( key, unicode )
     end
 end
 
-function l.keyreleased( key, unicode )
+function love.keyreleased( key, unicode )
 	
 end
 
-function l.mousepressed( x, y, button )
+function love.mousepressed( x, y, button )
     if button == "wd" then
         if (e.consoleLine + 1) >  (#e.print - 10) then return false end
         e.consoleLine = e.consoleLine + 1
@@ -206,10 +212,10 @@ function l.mousepressed( x, y, button )
     end
 end
 
-function l.mousereleased( x, y, button )
+function love.mousereleased( x, y, button )
 end
 
-function l.quit()
+function love.quit()
     if love.filesystem.exists("log.txt") ~= true then
         love.filesystem.write("log.txt", "\n", string.len("\n"))
     end
