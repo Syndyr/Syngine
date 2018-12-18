@@ -22,7 +22,8 @@ return {
     },
     bases = {
         {"base", "engine"},
-        {"image", "engine"}
+        {"image", "engine"},
+        {"timer", "engine"}
     },
     assets = {
         "forestFloor",
