@@ -18,9 +18,7 @@ function e.timer:new(name, delay, startActive, selfDestruct, funca)
     }
     e.timer.timers[name] = timerOverrides + e.class.getBase("timer", "engine")
     e.timer.timers[name].f = funca
-    e.timer.timers[name].f()
     print("Making a timer..")
-    print(Tserial.pack(e.timer.timers[name], true, true))
 end
 
 function e.timer:run()
@@ -28,17 +26,16 @@ function e.timer:run()
     for k,v in pairs(e.timer.timers) do
         if v.active == true then
             local timeDif = v.timeDue - timeNow
-            print(k)
             if timeDif <= 0.001 then
                 if v.kill == true then
                     
                 elseif v.active == true then
-                    --v:fire()
                     e.timer.timers[v.name]:fire()
+                    print("Timer hit with "..e.math.round(timeDif*1000, 2).."ms discrepency")
                 end
             end
         end
     end
 end
-e.timer:new("test", 1, true, true, function() print("Hoopla") end)
+e.timer:new("test", 1, true, false, function() print("Hoopla") end)
 print("libs.timer done.")

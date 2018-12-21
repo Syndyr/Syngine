@@ -64,7 +64,7 @@ function love.load()
                 
                 lfs = "love.main"
                 
-                print("Done ("..math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
+                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
                 print("----------")
                 print("")
             end
@@ -146,8 +146,6 @@ function love.load()
     --Console drawing
     
     love.graphics.setBackgroundColor(180,215,245)
-    seed = string.toSeed("a")
-    --Misc stuff
 end
 
 function love.resize(x,y)

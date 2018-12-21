@@ -1,4 +1,5 @@
 print("Defining string.explode function.")
+e.string = {}
 function e.string.explode(stack, needle)
 
 	if needle == nil then

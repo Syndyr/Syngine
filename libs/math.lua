@@ -1,4 +1,5 @@
 print("Defining math.bearing.")
+e.math = {}
 function e.math.bearing(a,b)
     
     if a ~= nil and b ~= nil then

@@ -8,26 +8,27 @@ t.active = false
 t.selfDestruct = true
 t.kill = false
 function t:activate()
-    t.timeDue = love.timer.getTime() + t.delay
-    t.active = true
+    self.timeDue = love.timer.getTime() + self.delay
+    self.active = true
 end
 
 function t:fire()
     if t ~= nil then
-        local name = t.name
+        local name = self.name
         local te = e.timer.timers[name]
-        
-        if e.timer.timers[te.name].f ~= nil then
-            e.timer.timers[te.name].f()
-        else
-            print("No function to fire for this timer?")
+        if te ~= nil then
+            if e.timer.timers[te.name].f ~= nil then
+                e.timer.timers[te.name].f()
+            else
+                print("No function to fire for this timer?")
+            end
+            te.active = false
+            if te.selfDestruct then
+                e.timer.timers[name] = nil
+            else
+                te:activate()
+            end
         end
-        if te.selfDestruct == true then
-            te.kill = true
-            e.timer.timers[te.name] = nil
-            te = nil
-        end
-        te.active = false
     end
 end
 

@@ -1,6 +1,6 @@
 local t = {
     h = { --Header, where map details will go
-        seed = string.toSeed("Cake is a lie"),
+        --seed = string.toSeed("Cake is a lie"),
         name = "Wasteland",
         cl = "wl",
         gdsl = 32,
