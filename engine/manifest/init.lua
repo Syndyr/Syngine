@@ -26,9 +26,10 @@ return {
         {"timer", "engine"}
     },
     assets = {
-        "forestFloor",
-        "grass",
-        "rock",
-        "water"
-    },
+         "tiles/noTex",
+         "tiles/forestFloor",
+         "tiles/grass",
+         "tiles/rock",
+         "tiles/water"
+    }
 }
