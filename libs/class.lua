@@ -31,8 +31,6 @@ function e.class.getBase(base, domain)
     end
     local baseName = domain:sub(1,1).."_"..base
     
-    print("Getting base.. "..baseName)
-    
     if e.class.bases[baseName] == nil then
         local aNewBase = setmetatable(require(domain..".classes.bases."..base), e.class.__superClass)
         if aNewBase.base ~= nil then
