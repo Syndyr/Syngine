@@ -89,8 +89,12 @@ function vecDef:toString()
     str = "vector: [x="..self["x"]..", y="..self["y"]..", z="..self["z"].."]"
     return str
 end
-function vecDef:splitxyz()
-    return self.x, self.y, self.z
+function vecDef:splitxyz(round)
+    if round then
+        return math.floor(self.x+0.5), math.floor(self.y+0.5), math.floor(self.z+0.5)
+    else
+        return self.x, self.y, self.z
+    end
 end
 function vecDef:x(a) 
     if a ~= nil then self.x = a end
