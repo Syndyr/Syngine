@@ -8,7 +8,7 @@ function love.load()
         consoleTyping = false, 
         consoleText = {}, 
         consoleLine = 0, 
-        
+        debug = true,
         dt = 0,
         font = love.graphics.newFont(12),
         manifest = require "engine.manifest"
@@ -69,10 +69,28 @@ function love.load()
                 print("")
             end
         end
+        print("Loading bases..")
+        print("")
+        print("----------")
+        print("")
         for k,v in pairs(e.manifest.bases) do
+            print("Importing base: "..v[1].." from domain: "..v[2])
             e.class.getBase(v[1], v[2])
         end
+        print("")
+        print("----------")
+        print("")
+        print("Bases loaded.")
+        print("Loading assets..")
+        print("")
+        print("----------")
+        print("")
+        for k,v in pairs(e.manifest.assets) do
+            print("Getting asset: "..v)
+            e.asset:load(v)
+        end
         print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
+        print(Tserial.pack(e, true, true))
     end
     
     e.loadItemsFromManifest()
@@ -145,6 +163,19 @@ function love.load()
         end
     end
     --Console drawing
+    e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
+    e.draw.drawque["e_background_debug"] = function(dt)
+        if not e.debug then return end
+        local xOff, yOff = (g.vp%64):toString()
+        local xLim, yLim = (e.vpBounds/64):splitxyz(true)
+        local x,y = 0
+        for x = 0, xLim, 1 do
+            for y = 0, yLim, 1 do
+                
+            end
+        end
+        
+    end
     
     love.graphics.setBackgroundColor(180,215,245)
 end
@@ -152,6 +183,7 @@ end
 function love.resize(x,y)
     g.vpBounds.x = x
     g.vpBounds.y = y
+    e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
 end
 
 function love.draw()
