@@ -18,7 +18,7 @@ function t:fire()
         local te = e.timer.timers[name]
         if te ~= nil then
             if e.timer.timers[te.name].f ~= nil then
-                e.timer.timers[te.name].f()
+                e.timer.timers[te.name].f(self)
             else
                 print("No function to fire for this timer?")
             end
