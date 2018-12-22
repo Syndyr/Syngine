@@ -27,15 +27,11 @@ function e.timer:run()
         if v.active == true then
             local timeDif = v.timeDue - timeNow
             if timeDif <= 0.001 then
-                if v.kill == true then
-                    
-                elseif v.active == true then
-                    e.timer.timers[v.name]:fire()
-                    print("Timer hit with "..e.math.round(timeDif*1000, 2).."ms discrepency")
-                end
+                e.timer.timers[v.name]:fire()
+                print("Timer hit with "..e.math.round(timeDif*1000, 2).."ms discrepency")
             end
         end
     end
 end
-e.timer:new("test", 1, true, false, function() print("Hoopla") end)
+e.timer:new("test", (math.random()*2), true, false, function() print("Hoopla") end)
 print("libs.timer done.")

@@ -98,7 +98,8 @@ function love.load()
         end
     end
     --Simple draw que function, allows for dynamically adding items to a draw que
-    e.hook:add("draw", "drawque", e.drawque)
+    e.hook:add("draw", "e_drawque", e.drawque)
+    e.hook:add("update", "e_timer", function() e.timer:run() end)
     
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     --Black magic metatable voodoo
@@ -161,7 +162,6 @@ end
 function love.update(dt)
     e.dt = dt
     e.hook:run("update", dt)
-    e.timer:run()
     if love.keyboard.isDown("s") then g.vp.y = g.vp.y-(g.mspeed*dt) end
     if love.keyboard.isDown("d") then g.vp.x = g.vp.x-(g.mspeed*dt) end
     if love.keyboard.isDown("w") then g.vp.y = g.vp.y+(g.mspeed*dt) end
