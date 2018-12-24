@@ -1,12 +1,14 @@
 local t = {}
 
 t.name = ""
+t.cid = "base_timer"
 t.timeMade = 0
 t.timeDue = 0
 t.delay = 0
 t.active = false
 t.selfDestruct = true
 t.kill = false
+
 function t:activate()
     self.timeDue = love.timer.getTime() + self.delay
     self.active = true
