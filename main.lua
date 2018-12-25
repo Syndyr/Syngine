@@ -44,7 +44,7 @@ function love.load()
     
     
     g = setmetatable({ 
-        mspeed = 10
+        mspeed = 500
     }, {__index = e})
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
@@ -166,14 +166,36 @@ function love.load()
     e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
     e.draw.drawque["e_background_debug"] = function(dt)
         if not e.debug then return end
-        local xOff, yOff = (g.vp%64):toString()
+        love.graphics.setColor(255,255,255)
+        local xOff, yOff = (g.vp%64):splitxyz()
         local xLim, yLim = (e.vpBounds/64):splitxyz(true)
-        local x,y = 0
-        for x = 0, xLim, 1 do
-            for y = 0, yLim, 1 do
-                
+        local x,y = -1, -1
+        local drawMe = e.asset:get("image", "noTex")
+        for x = -1, math.floor(xLim+0.5), 1 do
+            local rX, rY = (x*64)+xOff, (y*64)+yOff
+            for y = -1, math.floor(yLim+0.5), 1 do
+                rY = (y*64)+yOff
+                e.olDraw(drawMe.image, rX, rY)
             end
         end
+        love.graphics.setColor({64,64,64,128})
+        love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.font:getHeight(strn)-10), v(e.vpBounds.x, e.font:getHeight(strn)+10))
+        
+        love.graphics.setColor({255,255,255,128})
+        e.olLine(
+            {
+                0, e.vpBounds.y-e.font:getHeight(strn)-6, 
+                g.vpBounds.x, e.vpBounds.y-e.font:getHeight(strn)-6
+            }
+        )
+        
+        local context = g.vp:toString()
+        love.graphics.setColor({64,64,64})
+        love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        love.graphics.setColor({255,255,200})
+        love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        
+        e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_combined, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
         
     end
     
@@ -194,10 +216,10 @@ end
 function love.update(dt)
     e.dt = dt
     e.hook:run("update", dt)
-    if love.keyboard.isDown("s") then g.vp.y = g.vp.y-(g.mspeed*dt) end
-    if love.keyboard.isDown("d") then g.vp.x = g.vp.x-(g.mspeed*dt) end
-    if love.keyboard.isDown("w") then g.vp.y = g.vp.y+(g.mspeed*dt) end
-    if love.keyboard.isDown("a") then g.vp.x = g.vp.x+(g.mspeed*dt) end
+    if love.keyboard.isDown("s") then g.vp.y = g.vp.y-math.floor(g.mspeed*dt) end
+    if love.keyboard.isDown("d") then g.vp.x = g.vp.x-math.floor(g.mspeed*dt) end
+    if love.keyboard.isDown("w") then g.vp.y = g.vp.y+math.floor(g.mspeed*dt) end
+    if love.keyboard.isDown("a") then g.vp.x = g.vp.x+math.floor(g.mspeed*dt) end
 end
 
 function love.focus(bool)
