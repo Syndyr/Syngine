@@ -96,7 +96,9 @@ function love.load()
     e.loadItemsFromManifest()
     
     g.vp = Vector(0,0)
+    g.vpLerp = 0
     e.vpBounds = love.window.getDimensions()
+    
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
     function e.drawque()
@@ -118,6 +120,11 @@ function love.load()
     --Simple draw que function, allows for dynamically adding items to a draw que
     e.hook:add("draw", "e_drawque", e.drawque)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
+    e.hook:add("update", "e_noGameVPMovement", function() 
+        g.vp.x = math.floor(math.cos(g.vpLerp)*1000)
+        g.vp.y = math.floor(math.sin(g.vpLerp)*1000)
+        g.vpLerp = g.vpLerp + (3.14*(e.dt/10))
+    end)
     
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     --Black magic metatable voodoo
@@ -195,6 +202,7 @@ function love.load()
         love.graphics.setColor({255,255,200})
         love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
         
+        love.graphics.setColor({255,255,255,255})
         e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_combined, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
         
     end
