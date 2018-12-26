@@ -202,7 +202,14 @@ function love.load()
         love.graphics.setColor({255,255,200})
         love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
         
+        
+        local context = "FPS: "..love.timer.getFPS()
+        love.graphics.setColor({64,64,64})
+        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        love.graphics.setColor({255,255,200})
+        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
         love.graphics.setColor({255,255,255,255})
+        
         e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_combined, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
         
     end
@@ -224,6 +231,8 @@ end
 function love.update(dt)
     e.dt = dt
     e.hook:run("update", dt)
+    
+    if e.console then return false end
     if love.keyboard.isDown("s") then g.vp.y = g.vp.y-math.floor(g.mspeed*dt) end
     if love.keyboard.isDown("d") then g.vp.x = g.vp.x-math.floor(g.mspeed*dt) end
     if love.keyboard.isDown("w") then g.vp.y = g.vp.y+math.floor(g.mspeed*dt) end
