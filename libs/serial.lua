@@ -2,7 +2,6 @@
 -- @author Taehl (SelfMadeSpirit@gmail.com)
 print("Setting Tserial table.")
 Tserial = {}
-TSerial = Tserial	-- for backwards-compatibility
 
 --- Serializes a table into a string, in form of Lua script.
 -- @param t table to be serialized (may not contain any circular reference)

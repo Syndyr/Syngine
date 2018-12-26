@@ -4,7 +4,14 @@ e.hook = {
         draw = {}
     }
 }
-
+function e.hook:getHooks()
+    for k,v in pairs(e.hook.hooks) do
+        print("Catagory: "..k)
+        for n,b in pairs(v) do
+            print("\tHook "..n)
+        end
+    end
+end
 function e.hook:run(name, dt)
     if dt == nil then dt = e.dt end
     if self.hooks[name] == nil then 
