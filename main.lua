@@ -127,16 +127,14 @@ function love.load()
     e.hook:add("draw", "e_drawque", e.drawque)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
-            --[[
         e.vp.x = math.floor(math.cos(e.vpLerp)*1000)
         e.vp.y = math.floor(math.sin(e.vpLerp)*1000)
         e.vpLerp = e.vpLerp + (3.14*(e.dt/10))
-            ]]--
     end)
     e.hook:add("update", "e_introFade", function() 
         
         if e.introFade > 0 then
-            e.introFade = e.introFade - (255*(e.dt/1))
+            e.introFade = e.introFade - (255*(e.dt/5))
         else
             e.hook:remove("update", "e_introFade")
         end
