@@ -12,6 +12,8 @@ function love.load()
         debug = true,
         dt = 0,
         font = love.graphics.newFont(12),
+        doDraw = true,
+        mspeed = 500,
         manifest = require "engine.manifest"
     }
     
@@ -45,8 +47,7 @@ function love.load()
     
     
     
-    g = setmetatable({ 
-        mspeed = 500
+    g = setmetatable({
     }, {__index = e})
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
@@ -97,13 +98,14 @@ function love.load()
     
     e.loadItemsFromManifest()
     
-    g.vp = Vector(0,0)
-    g.vpLerp = 0
+    e.vp = Vector(0,0)
+    e.vpLerp = 0
     e.vpBounds = love.window.getDimensions()
     
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
     function e.drawque()
+        if not e.doDraw then return end
         for k,v in pairs(e.draw.drawque) do
             if type(v) ~= "function" and e.drawqueIndexBlacklist[k] == nil then
                 
@@ -123,9 +125,9 @@ function love.load()
     e.hook:add("draw", "e_drawque", e.drawque)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
-        g.vp.x = math.floor(math.cos(g.vpLerp)*1000)
-        g.vp.y = math.floor(math.sin(g.vpLerp)*1000)
-        g.vpLerp = g.vpLerp + (3.14*(e.dt/10))
+        e.vp.x = math.floor(math.cos(e.vpLerp)*1000)
+        e.vp.y = math.floor(math.sin(e.vpLerp)*1000)
+        e.vpLerp = e.vpLerp + (3.14*(e.dt/10))
     end)
     
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
@@ -135,7 +137,6 @@ function love.load()
     
     e.draw.drawque["e_console"] = function(dt)
         if e.console then
-            
             local I = 0
             local strn = ""
             for I = 0, 10, 1 do
@@ -146,7 +147,7 @@ function love.load()
             end
             
             local yOff = e.font:getHeight(strn)*10
-            local context = "/>\t("..(table.concat(e.consoleText) or "Lua")..")"
+            local context = "Lua: \t"..table.concat(e.consoleText)
             
             love.graphics.setColor({64,64,64,64})
             love.graphics.rectangle("fill", v(0,0), v(99999, yOff+35))
@@ -161,7 +162,7 @@ function love.load()
             e.olLine(
                 {
                     0, yOff+30, 
-                    g.vpBounds.x, yOff+30
+                    e.vpBounds.x, yOff+30
                 }
             )
             
@@ -172,11 +173,11 @@ function love.load()
         end
     end
     --Console drawing
-    e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
+    e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
     e.draw.drawque["e_background_debug"] = function(dt)
         if not e.debug then return end
-        love.graphics.setColor(255,255,255)
-        local xOff, yOff = (g.vp%64):splitxyz()
+        love.graphics.setColor(200,200,255)
+        local xOff, yOff = (e.vp%64):splitxyz()
         local xLim, yLim = (e.vpBounds/64):splitxyz(true)
         local x,y = -1, -1
         local drawMe = e.asset:get("image", "noTex")
@@ -194,11 +195,11 @@ function love.load()
         e.olLine(
             {
                 0, e.vpBounds.y-e.font:getHeight(strn)-6, 
-                g.vpBounds.x, e.vpBounds.y-e.font:getHeight(strn)-6
+                e.vpBounds.x, e.vpBounds.y-e.font:getHeight(strn)-6
             }
         )
         
-        local context = g.vp:toString()
+        local context = e.vp:toString().."\t|\t"..love.mouse.getPosition():toString()
         love.graphics.setColor({64,64,64})
         love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
@@ -220,13 +221,12 @@ function love.load()
 end
 
 function love.resize(x,y)
-    g.vpBounds.x = x
-    g.vpBounds.y = y
-    e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
+    e.vpBounds.x = x
+    e.vpBounds.y = y
+    e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
 end
 
 function love.draw()
-    --draw.drawque()
     e.hook:run("draw")
 end
 
@@ -235,10 +235,10 @@ function love.update(dt)
     e.hook:run("update", dt)
     
     if e.console then return false end
-    if love.keyboard.isDown("s") then g.vp.y = g.vp.y-math.floor(g.mspeed*dt) end
-    if love.keyboard.isDown("d") then g.vp.x = g.vp.x-math.floor(g.mspeed*dt) end
-    if love.keyboard.isDown("w") then g.vp.y = g.vp.y+math.floor(g.mspeed*dt) end
-    if love.keyboard.isDown("a") then g.vp.x = g.vp.x+math.floor(g.mspeed*dt) end
+    if love.keyboard.isDown("s") then e.vp.y = e.vp.y-math.floor(e.mspeed*dt) end
+    if love.keyboard.isDown("d") then e.vp.x = e.vp.x-math.floor(e.mspeed*dt) end
+    if love.keyboard.isDown("w") then e.vp.y = e.vp.y+math.floor(e.mspeed*dt) end
+    if love.keyboard.isDown("a") then e.vp.x = e.vp.x+math.floor(e.mspeed*dt) end
 end
 
 function love.focus(bool)
@@ -266,6 +266,10 @@ function love.keypressed( key, unicode )
         e.consoleTyping = e.console
         e.consoleText = {}
     end
+end
+
+function love.visible(visible)
+    e.doDraw = visible
 end
 
 function love.keyreleased( key, unicode )
