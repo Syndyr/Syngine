@@ -4,7 +4,7 @@ return {
             "math",
             "vector",
             "table",
-            "serial"
+            "thirdParty.serial"
         },{
             "string",
             "hook",

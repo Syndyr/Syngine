@@ -74,6 +74,7 @@ function love.load()
                 print("")
             end
         end
+        e.moonshine = require "libs.thirdParty.moonshine27122018"
         print("Loading bases..")
         print("")
         print("----------")
@@ -126,14 +127,16 @@ function love.load()
     e.hook:add("draw", "e_drawque", e.drawque)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
+            --[[
         e.vp.x = math.floor(math.cos(e.vpLerp)*1000)
         e.vp.y = math.floor(math.sin(e.vpLerp)*1000)
         e.vpLerp = e.vpLerp + (3.14*(e.dt/10))
+            ]]--
     end)
     e.hook:add("update", "e_introFade", function() 
         
         if e.introFade > 0 then
-            e.introFade = e.introFade - (255*(e.dt/10))
+            e.introFade = e.introFade - (255*(e.dt/1))
         else
             e.hook:remove("update", "e_introFade")
         end
@@ -194,11 +197,14 @@ function love.load()
     end
     --Console drawing
     e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
+    e.draw.boxBlur = e.moonshine(e.vpBounds.x, 45+(e.font:getHeight("a")*11), e.moonshine.effects.boxblur)
+    e.draw.boxBlur.radius = 200
     e.draw.drawque["e_background_debug"] = function(dt)
         if not e.debug then return end
         love.graphics.setCanvas(e.draw.debugCanvas)
         love.graphics.clear()
-        love.graphics.setColor(200,200,255)
+        love.graphics.setColor(200,200,255)  
+        
         local xOff, yOff = (e.vp%64):splitxyz()
         local xLim, yLim = (e.vpBounds/64):splitxyz(true)
         local x,y = -1, -1
@@ -210,6 +216,7 @@ function love.load()
                 e.olDraw(drawMe.image, rX, rY)
             end
         end
+        
         love.graphics.setColor({64,64,64,128})
         love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.font:getHeight(strn)-10), v(e.vpBounds.x, e.font:getHeight(strn)+10))
         
@@ -243,9 +250,12 @@ function love.load()
         end
         
         love.graphics.setCanvas()
-        
         love.graphics.setColor({255,255,255,255})
         e.olDraw(e.draw.debugCanvas)
+        if not e.console then return end
+        e.draw.boxBlur:draw(function() 
+            e.olDraw(e.draw.debugCanvas)
+        end)
     end
     
     --love.graphics.setBackgroundColor(180,215,245)
@@ -257,6 +267,7 @@ function love.resize(x,y)
     e.vpBounds.y = y
     e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
     e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
+    e.draw.boxBlur.resize(x,45+(e.font:getHeight("a")*11))
 end
 
 function love.draw()
