@@ -95,7 +95,6 @@ function love.load()
             e.asset:load(v)
         end
         print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
-        e.oldprint(Tserial.pack(e, true, true))
     end
     
     e.loadItemsFromManifest()
