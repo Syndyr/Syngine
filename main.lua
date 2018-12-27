@@ -4,6 +4,7 @@ function love.load()
     
     e = {
         print = {}, 
+        _version = "0.1.0",
         console = false, 
         consoleTyping = false, 
         consoleText = {}, 
@@ -13,6 +14,7 @@ function love.load()
         font = love.graphics.newFont(12),
         manifest = require "engine.manifest"
     }
+    
     --This is the engine table, all functions should go here.
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
@@ -198,16 +200,16 @@ function love.load()
         
         local context = g.vp:toString()
         love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         
         
-        local context = "FPS: "..love.timer.getFPS()
+        local context = "LOVE version: "..love._version.."\t|\t Syngyn version: "..e._version.."\t|\tFPS: "..love.timer.getFPS().." ("..math.floor(1/love.timer.getAverageDelta())..")"
         love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-4), 0, v(1,1))
+        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,255,255})
         
         e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_combined, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)

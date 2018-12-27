@@ -4,6 +4,7 @@ e.hook = {
         draw = {}
     }
 }
+
 function e.hook:getHooks()
     for k,v in pairs(e.hook.hooks) do
         print("Catagory: "..k)
@@ -12,6 +13,7 @@ function e.hook:getHooks()
         end
     end
 end
+
 function e.hook:run(name, dt)
     if dt == nil then dt = e.dt end
     if self.hooks[name] == nil then 
@@ -37,4 +39,16 @@ function e.hook:add(hook, name, func)
         self:new(hook)
     end
     self.hooks[hook][name] = {n = name, v = func}
+end
+
+function e.hook:remove(domain, name)
+    if e.hook.hooks[domain] ~= nil then
+        if e.hook.hooks[domain][name] ~= nil then
+            e.hook.hooks[domain][name] = nil
+        else
+            print("No such hook as: "..domain.."/"..name)
+        end
+    else
+        print("No such domain as: "..domain)
+    end
 end
