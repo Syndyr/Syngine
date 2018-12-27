@@ -14,6 +14,8 @@ function love.load()
         font = love.graphics.newFont(12),
         doDraw = true,
         mspeed = 500,
+        introFade = 255,
+        noGameFlash = false,
         manifest = require "engine.manifest"
     }
     
@@ -129,14 +131,26 @@ function love.load()
         e.vp.y = math.floor(math.sin(e.vpLerp)*1000)
         e.vpLerp = e.vpLerp + (3.14*(e.dt/10))
     end)
-    
+    e.hook:add("update", "e_introFade", function() 
+        
+        if e.introFade > 0 then
+            e.introFade = e.introFade - (255*(e.dt/10))
+        else
+            e.hook:remove("update", "e_introFade")
+        end
+        
+    end)
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
-    --Black magic metatable voodoo
     
     e.drawqueIndexBlacklist = {}
     
+    e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
     e.draw.drawque["e_console"] = function(dt)
         if e.console then
+            love.graphics.setCanvas(e.draw.consoleCanvas)
+            love.graphics.setBlendMode("alpha")
+            love.graphics.clear()
+            love.graphics.setBackgroundColor({0,0,0,0})
             local I = 0
             local strn = ""
             for I = 0, 10, 1 do
@@ -170,12 +184,21 @@ function love.load()
             love.graphics.print(strn, v(10,10), 0, v(1,1))
             love.graphics.setColor({255,255,200})
             love.graphics.print(strn, v(11,11), 0, v(1,1))
+            love.graphics.setColor({255,255,255})
+            love.graphics.setCanvas()
+            
+            love.graphics.setColor({255,255,255,255})
+            love.graphics.setBlendMode("alpha")
+            
+            e.olDraw(e.draw.consoleCanvas)
         end
     end
     --Console drawing
     e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
     e.draw.drawque["e_background_debug"] = function(dt)
         if not e.debug then return end
+        love.graphics.setCanvas(e.draw.debugCanvas)
+        love.graphics.clear()
         love.graphics.setColor(200,200,255)
         local xOff, yOff = (e.vp%64):splitxyz()
         local xLim, yLim = (e.vpBounds/64):splitxyz(true)
@@ -211,19 +234,30 @@ function love.load()
         love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
         love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
+        love.graphics.setColor({0,0,0,e.introFade})
+        love.graphics.rectangle("fill", v(), e.vpBounds)
+        love.graphics.setColor({255,255,255,255-e.introFade})
+        e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_default, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
+        
+        if e.noGameFlash then
+            e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_noGame, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)+44)
+        end
+        
+        love.graphics.setCanvas()
+        
         love.graphics.setColor({255,255,255,255})
-        
-        e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_combined, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
-        
+        e.olDraw(e.draw.debugCanvas)
     end
     
-    love.graphics.setBackgroundColor(180,215,245)
+    --love.graphics.setBackgroundColor(180,215,245)
+    e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
 end
 
 function love.resize(x,y)
     e.vpBounds.x = x
     e.vpBounds.y = y
     e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
+    e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
 end
 
 function love.draw()

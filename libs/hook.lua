@@ -6,10 +6,11 @@ e.hook = {
 }
 
 function e.hook:getHooks()
+    local str = {}
     for k,v in pairs(e.hook.hooks) do
-        print("Catagory: "..k)
+        str[#str+1] = "Catagory: "..k.."\n"
         for n,b in pairs(v) do
-            print("\tHook "..n)
+            str[#str+1] = "Hook: "..n.."\n"
         end
     end
 end
@@ -35,7 +36,7 @@ function e.hook:new(name)
 end
 
 function e.hook:add(hook, name, func)
-    if self.hooks[hook] ~= nil then
+    if self.hooks[hook] == nil then
         self:new(hook)
     end
     self.hooks[hook][name] = {n = name, v = func}
