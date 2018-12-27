@@ -9,14 +9,11 @@ return {
             "string",
             "hook",
             "class",
-            "timer"
-        },{
+            "timer",
             "map"
-        --    "main"
         },{
             "loveVec",
             "assets"
-        --    "keypress",
         --    "ui"
         }
     },
