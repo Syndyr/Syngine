@@ -11,7 +11,7 @@ function love.load()
         consoleLine = 0, 
         debug = true,
         dt = 0,
-        font = love.graphics.newFont(12),
+        font = love.graphics.newFont("assets/fonts/arial.ttf", 18),
         doDraw = true,
         mspeed = 500,
         introFade = 255,
@@ -162,7 +162,7 @@ function love.load()
                 
             end
             
-            local yOff = e.font:getHeight(strn)*10
+            local yOff = e.font:getHeight(strn)*11
             local context = "Lua: \t"..table.concat(e.consoleText)
             
             love.graphics.setColor({64,64,64,64})
@@ -197,7 +197,7 @@ function love.load()
     end
     --Console drawing
     e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
-    e.draw.boxBlur = e.moonshine(e.vpBounds.x, 45+(e.font:getHeight("a")*11), e.moonshine.effects.boxblur)
+    e.draw.boxBlur = e.moonshine(e.vpBounds.x, 45+(e.font:getHeight("a")*12), e.moonshine.effects.boxblur)
     e.draw.boxBlur.radius = 200
     e.draw.drawque["e_background_debug"] = function(dt)
         if not e.debug then return end
@@ -267,10 +267,11 @@ function love.resize(x,y)
     e.vpBounds.y = y
     e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
     e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
-    e.draw.boxBlur.resize(x,45+(e.font:getHeight("a")*11))
+    e.draw.boxBlur.resize(x,45+(e.font:getHeight("a")*12))
 end
 
 function love.draw()
+    love.graphics.setFont(e.font)
     e.hook:run("draw")
 end
 
