@@ -23,6 +23,7 @@ function e.class.mergWith(aTable, selfa)
     end
     return newTable
 end
+
 function e.class.getBase(base, domain)
     if domain == "e" then 
         domain = "engine" 
@@ -48,5 +49,3 @@ function e.class.getBase(base, domain)
     end
     error("No base found for "..baseName)
 end
-
---class = setmetatable({}, { __index = e.class})

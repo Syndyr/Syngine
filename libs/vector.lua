@@ -85,12 +85,14 @@ function vecDef:dist(b)
     end
     return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2)
 end
+
 function vecDef:toString(round)
     if round == nil then round = false end
     local x,y,z = self:splitxyz(round)
     str = "vector: [x="..x..", y="..y..", z="..x.."]"
     return str
 end
+
 function vecDef:splitxyz(round)
     if round then
         return math.floor(self.x+0.5), math.floor(self.y+0.5), math.floor(self.z+0.5)
@@ -98,17 +100,22 @@ function vecDef:splitxyz(round)
         return self.x, self.y, self.z
     end
 end
+
 function vecDef:x(a) 
     if a ~= nil then self.x = a end
-    return self.x end
+    return self.x 
+end
+
 function vecDef:y(a) 
     if a ~= nil then self.y = a end
     return self.y 
 end
+
 function vecDef:z(a) 
     if a ~= nil then self.z = a end
     return self.z 
 end
+
 function Vector(x,y,z)
     if z == nil then z = 0 end
     if y == nil then y = 0 end
@@ -128,9 +135,11 @@ function Vector(x,y,z)
     end
     return t
 end
+
 function v(x,y,z)
     return Vector(x,y,z)
 end
+
 function vecTabToSimpleTab(tab)
     for k,v in pairs(tab) do
         if getmetatable(v) == vec then
@@ -139,12 +148,9 @@ function vecTabToSimpleTab(tab)
         end
     end
 end
+
 function packVectorNicely(...)
     return vecTabToSimpleTab(arg)
 end
-local tVec = Vector(1,1,0)
-local tVe2 = Vector(5,5,0)
-local tPls = tVec+tVe2
 
-print(tVec:dist(tPls))
 print("libs.vector done.")

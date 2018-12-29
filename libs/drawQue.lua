@@ -6,6 +6,7 @@ e.drawQue = {
     },
     
 }
+
 function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size, upX, upY)
     assert( type(name) == "string" and 
             type(catagory) == "string" and
@@ -51,6 +52,7 @@ function e.drawQue.draw(dt)
         end
     end
 end
+
 function e.drawQue.updateCanvasSizes(w)
     local function clk(t,w)
         for k,v in pairs(t) do
@@ -62,6 +64,7 @@ function e.drawQue.updateCanvasSizes(w)
     clk(e.drawQue.que.other, w)
     clk(e.drawQue.que.ui, w)
 end
+
 function e.drawQue:init()
     e.hook:add("draw", "e_drawque", e.drawQue.draw)
     e.hook:add("resize", "e_updateCanvasSizes", e.drawQue.updateCanvasSizes)

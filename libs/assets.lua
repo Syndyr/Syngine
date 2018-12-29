@@ -10,8 +10,6 @@ function e.asset:load(folder)
     local base = {}
     local asset = setmetatable(require("assets/"..folder), e.class.__superClass)
     
-    
-    
     if asset.type == "image" then
         base = e.class.getBase("image", "engine")
         asset = asset+base
