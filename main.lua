@@ -74,7 +74,7 @@ function love.load()
                 print("")
             end
         end
-        e.moonshine = require "libs.thirdParty.moonshine27122018"
+        --e.moonshine = require "libs.thirdParty.moonshine27122018"
         print("Loading bases..")
         print("")
         print("----------")
@@ -95,37 +95,28 @@ function love.load()
             print("Getting asset: "..v)
             e.asset:load(v)
         end
+        print("")
+        print("----------")
+        print("")
+        print("Assets loaded.")
+        print("Loading drawables..")
+        print("")
+        print("----------")
+        print("")
+        for k,v in pairs(e.manifest.drawables) do
+            print("Getting drawable: "..v)
+            require("assets.drawables."..v)
+        end
         print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
     end
-    
     e.loadItemsFromManifest()
-    
     e.vp = Vector(0,0)
     e.vpLerp = 0
     e.vpBounds = love.window.getDimensions()
     
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
-    function e.drawque()
-        if not e.doDraw then return end
-        for k,v in pairs(e.draw.drawque) do
-            if type(v) ~= "function" and e.drawqueIndexBlacklist[k] == nil then
-                
-                print("Attempted to draw a non function object via drawquee")
-                print(k..[["]]..type(v)..[["]])
-                print("Item added to the Index Blacklist.")
-                e.drawqueIndexBlacklist[k] = true
-            else
-                if e.drawqueIndexBlacklist[k] == nil then
-                    
-                    v(dt)
-                end
-            end
-        end
-    end
-    --Simple draw que function, allows for dynamically adding items to a draw que
-    --e.hook:add("draw", "e_drawque", e.drawque)
-    e.hook:add("draw", "e_drawque2", function()
+    e.hook:add("e_drawCallAux", "bearingTest", function()
         local screenCenter = e.vpBounds/2
         local mPos = e.vp + e.vpBounds
             
@@ -141,138 +132,27 @@ function love.load()
         
         love.graphics.print(bearing.." "..screenCenter:dist(mPos), screenCenter+v(0,10))
     end)
+    e.hook:add("e_drawCallAux", "fade", function()
+        love.graphics.setColor({0,0,0,e.introFade})
+        love.graphics.rectangle("fill", v(), e.vpBounds)
+    end)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
         e.vp.x = (math.sin(e.vpLerp)*100) - (e.vpBounds.x/2)
         e.vp.y = (math.cos(e.vpLerp)*100) - (e.vpBounds.y/2)
         e.vpLerp = e.vpLerp + 1*e.dt
     end)
-    e.hook:add("update", "e_introFade", function() 
-        
-        if e.introFade > 0 then
-            e.introFade = e.introFade - (255*(e.dt/5))
-        else
-            e.hook:remove("update", "e_introFade")
-        end
-        
-    end)
-    e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
-    
-    e.drawqueIndexBlacklist = {}
-    --[[
-    e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
-    e.draw.drawque["e_console"] = function(dt)
-        if e.console then
-            love.graphics.setCanvas(e.draw.consoleCanvas)
-            love.graphics.setBlendMode("alpha")
-            love.graphics.clear()
-            love.graphics.setBackgroundColor({0,0,0,0})
-            local I = 0
-            local strn = ""
-            for I = 0, 10, 1 do
-                
-                if e.print[#e.print-(I+e.consoleLine)] == nil then break end
-                strn = strn..e.print[#e.print-(I+e.consoleLine)][1].."\n"
-                
+    e.timer:new("e_fadeStart", 1, true, true, function()
+        e.hook:add("update", "e_introFade", function() 
+
+            if e.introFade > 0 then
+                e.introFade = e.introFade - (255*(e.dt/5))
+            else
+                e.hook:remove("update", "e_introFade")
             end
-            
-            local yOff = e.font:getHeight(strn)*11
-            local context = "Lua: \t"..table.concat(e.consoleText)
-            
-            love.graphics.setColor({64,64,64,64})
-            love.graphics.rectangle("fill", v(0,0), v(99999, yOff+35))
-            love.graphics.rectangle("fill", v(0,yOff+40), v(99999, e.font:getHeight(strn)+5 ))
-            
-            love.graphics.setColor({64,64,64})
-            love.graphics.print(context, v(10,yOff+42), 0, v(1,1))
-            love.graphics.setColor({255,255,200})
-            love.graphics.print(context, v(11,yOff+43), 0, v(1,1))
-            
-            love.graphics.setColor({255,255,255,128})
-            e.olLine(
-                {
-                    0, yOff+30, 
-                    e.vpBounds.x, yOff+30
-                }
-            )
-            
-            love.graphics.setColor({64,64,64})
-            love.graphics.print(strn, v(10,10), 0, v(1,1))
-            love.graphics.setColor({255,255,200})
-            love.graphics.print(strn, v(11,11), 0, v(1,1))
-            love.graphics.setColor({255,255,255})
-            love.graphics.setCanvas()
-            
-            love.graphics.setColor({255,255,255,255})
-            love.graphics.setBlendMode("alpha")
-            
-            e.olDraw(e.draw.consoleCanvas)
-        end
-    end
-    --Console drawing
-    e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
-    e.draw.boxBlur = e.moonshine(e.vpBounds.x, 45+(e.font:getHeight("a")*12), e.moonshine.effects.boxblur)
-    e.draw.boxBlur.radius = 200
-    e.draw.drawque["e_background_debug"] = function(dt)
-        if not e.debug then return end
-        love.graphics.setCanvas(e.draw.debugCanvas)
-        love.graphics.clear()
-        love.graphics.setColor(200,200,255)  
-        
-        local xOff, yOff = (e.vp%64):splitxyz()
-        local xLim, yLim = (e.vpBounds/64):splitxyz(true)
-        local x,y = -1, -1
-        local drawMe = e.asset:get("image", "noTex")
-        for x = -1, math.floor(xLim+0.5), 1 do
-            local rX, rY = (x*64)+xOff, (y*64)+yOff
-            for y = -1, math.floor(yLim+0.5), 1 do
-                rY = (y*64)+yOff
-                e.olDraw(drawMe.image, rX, rY)
-            end
-        end
-        
-        love.graphics.setColor({64,64,64,128})
-        love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.font:getHeight(strn)-10), v(e.vpBounds.x, e.font:getHeight(strn)+10))
-        
-        love.graphics.setColor({255,255,255,128})
-        e.olLine(
-            {
-                0, e.vpBounds.y-e.font:getHeight(strn)-6, 
-                e.vpBounds.x, e.vpBounds.y-e.font:getHeight(strn)-6
-            }
-        )
-        
-        local context = e.vp:toString(true).."\t|\t"..love.mouse.getPosition():toString(true)
-        love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        
-        
-        local context = "LOVE version: "..love._version.."\t|\t Syngyn version: "..e._version.."\t|\tFPS: "..love.timer.getFPS().." ("..math.floor(1/love.timer.getAverageDelta())..")"
-        love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        love.graphics.setColor({0,0,0,e.introFade})
-        love.graphics.rectangle("fill", v(), e.vpBounds)
-        love.graphics.setColor({255,255,255,255-e.introFade})
-        --e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_default, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
-        
-        if e.noGameFlash then
-            --e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_noGame, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)+44)
-        end
-        
-        love.graphics.setCanvas()
-        love.graphics.setColor({255,255,255,255})
-        e.olDraw(e.draw.debugCanvas)
-        if not e.console then return end
-        e.draw.boxBlur:draw(function() 
-            e.olDraw(e.draw.debugCanvas)
+
         end)
-    end
-    ]]--
-    --love.graphics.setBackgroundColor(180,215,245)
+    end)
     e.drawQue:init()
     e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
 end
@@ -280,9 +160,7 @@ end
 function love.resize(x,y)
     e.vpBounds.x = x
     e.vpBounds.y = y
-    e.draw.debugCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
-    e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
-    e.draw.boxBlur.resize(x,45+(e.font:getHeight("a")*12))
+    e.hook:run("resize", e.vpBounds)
 end
 
 function love.draw()

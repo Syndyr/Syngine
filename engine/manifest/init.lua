@@ -21,7 +21,8 @@ return {
     bases = {
         {"base", "engine"},
         {"image", "engine"},
-        {"timer", "engine"}
+        {"timer", "engine"},
+        {"drawable", "engine"}
     },
     assets = {
         "tiles/noTex",
@@ -30,5 +31,9 @@ return {
         "tiles/rock",
         "tiles/water",
         "splashes/syngyn"
+    },
+    drawables = {
+        "consoleUI",
+        "noGameScreen"
     }
 }

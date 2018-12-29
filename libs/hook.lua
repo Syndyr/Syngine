@@ -1,7 +1,9 @@
 e.hook = {
     hooks = {
         update = {},
-        draw = {}
+        draw = {},
+        resize = {},
+        e_drawCallAux = {}
     }
 }
 
