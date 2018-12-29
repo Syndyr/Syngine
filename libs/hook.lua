@@ -13,6 +13,7 @@ function e.hook:getHooks()
             str[#str+1] = "Hook: "..n.."\n"
         end
     end
+    return str
 end
 
 function e.hook:run(name, dt)

@@ -13,7 +13,8 @@ return {
             "map"
         },{
             "loveVec",
-            "assets"
+            "assets",
+            "drawQue"
         --    "ui"
         }
     },

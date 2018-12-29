@@ -124,12 +124,28 @@ function love.load()
         end
     end
     --Simple draw que function, allows for dynamically adding items to a draw que
-    e.hook:add("draw", "e_drawque", e.drawque)
+    --e.hook:add("draw", "e_drawque", e.drawque)
+    e.hook:add("draw", "e_drawque2", function()
+        local screenCenter = e.vpBounds/2
+        local mPos = e.vp + e.vpBounds
+            
+        local bearing = math.atan2(mPos.x - screenCenter.x, mPos.y - screenCenter.y)+math.pi
+        love.graphics.setColor(255,255,255,255)
+        e.olLine({
+            
+            screenCenter.x, screenCenter.y,
+            mPos.x, mPos.y
+                
+        })    
+        love.graphics.setColor(255,0,255,255)
+        
+        love.graphics.print(bearing.." "..screenCenter:dist(mPos), screenCenter+v(0,10))
+    end)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
-        e.vp.x = math.floor(math.cos(e.vpLerp)*1000)
-        e.vp.y = math.floor(math.sin(e.vpLerp)*1000)
-        e.vpLerp = e.vpLerp + (3.14*(e.dt/10))
+        e.vp.x = (math.sin(e.vpLerp)*100) - (e.vpBounds.x/2)
+        e.vp.y = (math.cos(e.vpLerp)*100) - (e.vpBounds.y/2)
+        e.vpLerp = e.vpLerp + 1*e.dt
     end)
     e.hook:add("update", "e_introFade", function() 
         
@@ -143,7 +159,7 @@ function love.load()
     e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
     
     e.drawqueIndexBlacklist = {}
-    
+    --[[
     e.draw.consoleCanvas = love.graphics.newCanvas(e.vpBounds.x, e.vpBounds.y, "normal", 0)
     e.draw.drawque["e_console"] = function(dt)
         if e.console then
@@ -226,7 +242,7 @@ function love.load()
             }
         )
         
-        local context = e.vp:toString().."\t|\t"..love.mouse.getPosition():toString()
+        local context = e.vp:toString(true).."\t|\t"..love.mouse.getPosition():toString(true)
         love.graphics.setColor({64,64,64})
         love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
@@ -241,10 +257,10 @@ function love.load()
         love.graphics.setColor({0,0,0,e.introFade})
         love.graphics.rectangle("fill", v(), e.vpBounds)
         love.graphics.setColor({255,255,255,255-e.introFade})
-        e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_default, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
+        --e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_default, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
         
         if e.noGameFlash then
-            e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_noGame, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)+44)
+            --e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_noGame, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)+44)
         end
         
         love.graphics.setCanvas()
@@ -255,8 +271,9 @@ function love.load()
             e.olDraw(e.draw.debugCanvas)
         end)
     end
-    
+    ]]--
     --love.graphics.setBackgroundColor(180,215,245)
+    e.drawQue:init()
     e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
 end
 

@@ -5,10 +5,6 @@ c.name = "Base Class"
 
 c.active = false
 c.data = {}
-
-function c:draw()
-    return false
-end
 function c:getClassID()
     return self.cid
 end

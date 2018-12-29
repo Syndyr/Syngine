@@ -85,8 +85,10 @@ function vecDef:dist(b)
     end
     return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2)
 end
-function vecDef:toString()
-    str = "vector: [x="..self["x"]..", y="..self["y"]..", z="..self["z"].."]"
+function vecDef:toString(round)
+    if round == nil then round = false end
+    local x,y,z = self:splitxyz(round)
+    str = "vector: [x="..x..", y="..y..", z="..x.."]"
     return str
 end
 function vecDef:splitxyz(round)
