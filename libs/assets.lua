@@ -28,10 +28,14 @@ end
 
 function e.asset:get(type, name)
     if type == "image" then
-        if e.asset.assets[type][name] ~= nil then
-            return e.asset.assets[type][name]
+        if self.assets[type][name] ~= nil then
+            return self.assets[type][name]
         else
             return e.asset:get("image", "noTex")
         end
+    else
+       if self.assets[type][name] ~= nil then
+            return self.assets[type][name]
+        end 
     end
 end
