@@ -119,8 +119,8 @@ function love.load()
     e.hook:add("e_drawCallAux", "bearingTest", function()
         local screenCenter = e.vpBounds/2
         local mPos = e.vp + e.vpBounds
-            
-        local bearing = math.atan2(mPos.x - screenCenter.x, mPos.y - screenCenter.y)+math.pi
+        local bearing = screenCenter:bearing2D(mPos)
+
         love.graphics.setColor(255,255,255,255)
         e.olLine({
             

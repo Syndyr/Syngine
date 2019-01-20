@@ -83,7 +83,12 @@ function vecDef:dist(b)
             return 0 
         end
     end
-    return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2)
+    return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2), v(b.x-self.x, b.y-self.y, b.z-self.z)
+end
+
+function vecDef:bearing2D(b)
+    local dist, delta = b:dist(self)
+    return math.atan2(delta.y, delta.x), dist, delta
 end
 
 function vecDef:toString(round)
