@@ -122,9 +122,9 @@ function love.load()
         local pi = math.pi
         
         local zero = v(200,200)+e.vp
+        local bearing, mDist = zero:bearing2D(mPos)
         local a = v(0,100)+zero
-        local b = v(math.sin(pi*0.125)*100, math.cos(pi*0.125)*100)+zero
-        local bearing = zero:bearing2D(mPos)
+        local b = v(math.sin(pi*0.125)*mDist, math.cos(pi*0.125)*mDist)+zero
         local c = v(math.sin(bearing)*100, math.cos(bearing)*100)+zero
         
         local ca = v(math.sin(bearing-(pi*0.5))*25, math.cos(bearing-(pi*0.5))*25)+zero
@@ -132,7 +132,7 @@ function love.load()
             
         local cb = v(math.sin(bearingcaz)*25, math.cos(bearingcaz)*25)+zero
         
-        if bearing > 0 and bearing < pi*0.125 then
+        if bearing >= 0 and bearing <= pi*0.125 then
             love.graphics.setColor(0,255,0,255)
         else
             love.graphics.setColor(255,0,0,255)
@@ -140,7 +140,7 @@ function love.load()
         e.olLine({
             
             zero.x, zero.y,
-            a.x, a.y
+            a.x, zero.y + mDist
                 
         })
             
@@ -150,6 +150,11 @@ function love.load()
             b.x, b.y
                 
         })
+            
+        e.graphics.arch("line", false, v(200,200)+e.vp, mDist-50, mDist-60, 0, pi*0.125, 16, false)
+        if bearing <= 0 then bearing = (bearing)+pi*2 end
+        e.graphics.arch("line", false, v(200,200)+e.vp, mDist, mDist-10, 0, bearing, "dynamic", false)
+           
         love.graphics.setColor(255,0,255,255)
         e.olLine({
             
@@ -163,10 +168,8 @@ function love.load()
             cb.x, cb.y
                 
         })
-        
+         
         love.graphics.setColor(255,0,255,255)
-        
-        love.graphics.print(bearing.."\n"..zero:dist(mPos).."\n"..mPos:toString(true), screenCenter+v(0,10))
     end)
     e.hook:add("e_drawCallAux", "fade", function()
         love.graphics.setColor({0,0,0,e.introFade})
@@ -183,7 +186,7 @@ function love.load()
     e.timer:new("e_fadeStart", 1, true, true, function()
         e.hook:add("update", "e_introFade", function() 
 
-            if e.introFade > 0 then
+            if e.introFade >= 0 then
                 e.introFade = e.introFade - (255*(e.dt/5))
             else
                 e.hook:remove("update", "e_introFade")
