@@ -87,8 +87,8 @@ function vecDef:dist(b)
 end
 
 function vecDef:bearing2D(b)
-    local dist, delta = b:dist(self)
-    return math.atan2(delta.y, delta.x), dist, delta
+    local dist, delta = self:dist(b)
+    return math.atan2(delta.x, delta.y), dist, delta
 end
 
 function vecDef:toString(round)

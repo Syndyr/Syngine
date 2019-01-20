@@ -14,6 +14,7 @@ return {
         },{
             "loveVec",
             "assets",
+            "graphics",
             "drawQue"
         --    "ui"
         }

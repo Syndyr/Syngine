@@ -11,14 +11,14 @@ function love.load()
         consoleLine = 0, 
         debug = true,
         dt = 0,
-        font = love.graphics.newFont("assets/fonts/arial.ttf", 18),
+        fonts = {},
         doDraw = true,
         mspeed = 500,
         introFade = 255,
         noGameFlash = false,
         manifest = require "engine.manifest"
     }
-    
+    e.fonts.arial18 = love.graphics.newFont("assets/fonts/arial.ttf", 18)
     --This is the engine table, all functions should go here.
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
@@ -31,7 +31,7 @@ function love.load()
         if s == nil then s = "nil" end
         if type(s) ~= "string" then s = tostring(s) end
         --Some simple input sanitisation 
-        local strn = '['..os.date("%H:%M:%S")..']['..lfs..'] : '..s
+        local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..s
         e.oldprint(strn)
         --Do a classic print
         
@@ -118,19 +118,55 @@ function love.load()
     
     e.hook:add("e_drawCallAux", "bearingTest", function()
         local screenCenter = e.vpBounds/2
-        local mPos = e.vp + e.vpBounds
-        local bearing = screenCenter:bearing2D(mPos)
-
-        love.graphics.setColor(255,255,255,255)
+        local mPos = love.mouse.getPosition()
+        local pi = math.pi
+        
+        local zero = v(200,200)+e.vp
+        local a = v(0,100)+zero
+        local b = v(math.sin(pi*0.125)*100, math.cos(pi*0.125)*100)+zero
+        local bearing = zero:bearing2D(mPos)
+        local c = v(math.sin(bearing)*100, math.cos(bearing)*100)+zero
+        
+        local ca = v(math.sin(bearing-(pi*0.5))*25, math.cos(bearing-(pi*0.5))*25)+zero
+        local bearingcaz = ca:bearing2D(zero)
+            
+        local cb = v(math.sin(bearingcaz)*25, math.cos(bearingcaz)*25)+zero
+        
+        if bearing > 0 and bearing < pi*0.125 then
+            love.graphics.setColor(0,255,0,255)
+        else
+            love.graphics.setColor(255,0,0,255)
+        end
         e.olLine({
             
-            screenCenter.x, screenCenter.y,
-            mPos.x, mPos.y
+            zero.x, zero.y,
+            a.x, a.y
                 
-        })    
+        })
+            
+        e.olLine({
+            
+            zero.x, zero.y,
+            b.x, b.y
+                
+        })
+        love.graphics.setColor(255,0,255,255)
+        e.olLine({
+            
+            zero.x, zero.y,
+            c.x, c.y
+                
+        })
+        e.olLine({
+            
+            ca.x, ca.y,
+            cb.x, cb.y
+                
+        })
+        
         love.graphics.setColor(255,0,255,255)
         
-        love.graphics.print(bearing.." "..screenCenter:dist(mPos), screenCenter+v(0,10))
+        love.graphics.print(bearing.."\n"..zero:dist(mPos).."\n"..mPos:toString(true), screenCenter+v(0,10))
     end)
     e.hook:add("e_drawCallAux", "fade", function()
         love.graphics.setColor({0,0,0,e.introFade})
@@ -138,9 +174,11 @@ function love.load()
     end)
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
+        --[[
         e.vp.x = (math.sin(e.vpLerp)*100) - (e.vpBounds.x/2)
         e.vp.y = (math.cos(e.vpLerp)*100) - (e.vpBounds.y/2)
         e.vpLerp = e.vpLerp + 1*e.dt
+        ]]--
     end)
     e.timer:new("e_fadeStart", 1, true, true, function()
         e.hook:add("update", "e_introFade", function() 
@@ -164,7 +202,7 @@ function love.resize(x,y)
 end
 
 function love.draw()
-    love.graphics.setFont(e.font)
+    love.graphics.setFont(e.fonts.arial18)
     e.hook:run("draw")
 end
 

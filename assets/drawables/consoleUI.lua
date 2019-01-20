@@ -13,12 +13,12 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
             
         end
         
-        local yOff = e.font:getHeight(strn)*11
+        local yOff = e.fonts.arial18:getHeight(strn)*11
         local context = "Lua: \t"..table.concat(e.consoleText)
         
         love.graphics.setColor({64,64,64,200})
         love.graphics.rectangle("fill", v(0,0), v(vpBounds.x, yOff+35))
-        love.graphics.rectangle("fill", v(0,yOff+40), v(vpBounds.x, e.font:getHeight(strn)+5 ))
+        love.graphics.rectangle("fill", v(0,yOff+40), v(vpBounds.x, e.fonts.arial18:getHeight(strn)+5 ))
         
         love.graphics.setColor({64,64,64})
         love.graphics.print(context, v(10,yOff+42), 0, v(1,1))
@@ -45,28 +45,28 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
         
             
         love.graphics.setColor({64,64,64,128})
-        love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.font:getHeight(strn)-10), v(e.vpBounds.x, e.font:getHeight(strn)+10))
+        love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-10), v(e.vpBounds.x, e.fonts.arial18:getHeight(strn)+10))
         
         love.graphics.setColor({255,255,255,128})
         e.olLine(
             {
-                0, e.vpBounds.y-e.font:getHeight(strn)-6, 
-                e.vpBounds.x, e.vpBounds.y-e.font:getHeight(strn)-6
+                0, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-6, 
+                e.vpBounds.x, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-6
             }
         )
         
         local context = e.vp:toString(true).."\t|\t"..love.mouse.getPosition():toString(true)
         love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
+        love.graphics.print(context, v(10,e.vpBounds.y-e.fonts.arial18:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
+        love.graphics.print(context, v(11,e.vpBounds.y-e.fonts.arial18:getHeight(strn)-2), 0, v(1,1))
         
         
         local context = "LOVE version: "..love._version.."\t|\t Syngyn version: "..e._version.."\t|\tFPS: "..love.timer.getFPS().." ("..math.floor(1/love.timer.getAverageDelta())..")"
         love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
+        love.graphics.print(context, v(e.vpBounds.x-e.fonts.arial18:getWidth(context)-5, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
+        love.graphics.print(context, v(e.vpBounds.x-e.fonts.arial18:getWidth(context)-4, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,255,255})
     end
-end, true, v(), v(love.window.getDimensions().x, 45+(e.font:getHeight(strn)*12)), true, false)
+end, true, v(), v(love.window.getDimensions().x, 45+(e.fonts.arial18:getHeight(strn)*12)), true, false)
