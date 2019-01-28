@@ -7,7 +7,7 @@ e.drawQue = {
     
 }
 
-function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size, upX, upY)
+function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size, upX, upY, otherData)
     assert( type(name) == "string" and 
             type(catagory) == "string" and
             type(priority) == "number" and
@@ -15,12 +15,12 @@ function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size,
             "Type missmatch.")
     assert(self.que[catagory])
     if pos then
-        assert(getmetatable(pos) ~= v(), "Position value given is incorrect")
+        assert(getmetatable(pos) ~= v(), "Position type given is incorrect")
     else
         pos = v()
     end
     if size then
-        assert(getmetatable(size) ~= v(), "Size value given is incorrect")
+        assert(getmetatable(size) ~= v(), "Size type given is incorrect")
     else
         size = e.vpBounds
     end
@@ -28,8 +28,10 @@ function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size,
     if upX == nil then upX = false end
     if upY == nil then upY = false end
     local formatted =  {name = name, catagory = catagory, draw = drawFunc, doDraw = doDraw, pos = pos, size = size, canvas = love.graphics.newCanvas(size.x, size.y), upX = upX, upY = upY}
-    formatter = formatted + e.class.getBase("drawable", "engine")
+    formatted = formatted + e.class.getBase("drawable", "engine")
+    formatted.otherData = otherData
     table.insert(self.que[catagory], priority, formatted)
+    return self.que[catagory][priority].canvas
 end
 
 function e.drawQue.draw(dt)
@@ -37,7 +39,7 @@ function e.drawQue.draw(dt)
     for k,v in pairs(e.drawQue.que.other) do
         if v.doDraw then
             love.graphics.setCanvas(v.canvas)
-            v.draw(dt)
+            v.draw(dt,v)
             love.graphics.setCanvas(lastCanvasUsed)
             e.olDraw(v.canvas, v.pos.x, v.pos.y)
         end
@@ -46,7 +48,7 @@ function e.drawQue.draw(dt)
     for k,v in pairs(e.drawQue.que.ui) do
         if v.doDraw then
             love.graphics.setCanvas(v.canvas)
-            v.draw(dt)
+            v.draw(dt,v)
             love.graphics.setCanvas(lastCanvasUsed)
             e.olDraw(v.canvas, v.pos.x, v.pos.y)
         end
