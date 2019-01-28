@@ -15,15 +15,16 @@ return {
             "loveVec",
             "assets",
             "graphics",
-            "drawQue"
-        --    "ui"
+            "drawQue",
+            "ui"
         }
     },
     bases = {
         {"base", "engine"},
         {"image", "engine"},
         {"timer", "engine"},
-        {"drawable", "engine"}
+        {"drawable", "engine"},
+        {"uiFrame", "engine"}
     },
     assets = {
         "tiles/noTex",
