@@ -35,7 +35,7 @@ function love.load()
         e.oldprint(strn)
         --Do a classic print
         
-        e.print[#e.print+1] = {strn}
+        e.print[#e.print+1] = strn
         --Add the print to the print array
     end
     lfs = "love.main"
@@ -61,7 +61,7 @@ function love.load()
                 
                 local st = l.timer.getTime()
                 
-                print("Impoting library : ".."libs."..b.."....")
+                print("Importing library : ".."libs."..b.."....")
                 
                 lfs = "libs."..b
                 
@@ -270,13 +270,7 @@ function love.mousereleased( x, y, button )
 end
 
 function love.quit()
-    if love.filesystem.exists("log.txt") ~= true then
-        love.filesystem.write("log.txt", "\n", string.len("\n"))
-    end
-    local str = ""
-    for k,v in pairs(e.print) do 
-        str = str.."\n"..v[1]
-    end
-    love.filesystem.append("log.txt", "\n_______________________________________\n\n"..os.date("%d_%m_%y_%H%M").."\n\n_______________________________________\n\n", str:len())
-    love.filesystem.append("log.txt", str, str:len())
+    print(type(e.print[1]))
+    local str = table.concat(e.print, "\n\r")
+    love.filesystem.append("log_"..os.date("%d%m%y%H%M%S")..math.random(0,99999)..".txt", "\n_______________________________________\n\n"..os.date("%d_%m_%y_%H%M").."\n\n_______________________________________\n\n"..str, str:len())
 end

@@ -1,6 +1,14 @@
 print("Setting Vector table.")
-local vecDef = {}
-local vec = {
+--[[
+
+    This is the vector metatype library.
+    It purpose is to add a simple vector implimentation to
+    Lua, specifically for use within graphics and/or game engines.
+    This is a purely Lua implimentation.
+
+]]--
+local vecDef = {} --Index metatable for functions, saves a little on mem use.
+local vec = { --Method metatable for metamethods.
     __index = vecDef,
     __unm = function(a) 
         a.x = -a.x
@@ -75,7 +83,15 @@ local vec = {
         return false
     end
 }
-function vecDef:dist(b)
+
+--[[
+
+    A distance function, works in 3 diamentions,
+    x, y and z.
+    b is the target.
+
+]]--
+function vecDef:dist(b) 
     if type(self) ~= "table" or type(self) ~= "table" or getmetatable(self) ~= vec then 
         return 0 
     else 
@@ -86,18 +102,48 @@ function vecDef:dist(b)
     return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2), v(b.x-self.x, b.y-self.y, b.z-self.z)
 end
 
+--[[
+
+    Simple bounds checking function.
+    Checks if p[oint] is within a and b.
+
+]]--
+function vecDef:inBounds2D(b, p )
+    return  p.x >= self.x and
+            p.y >= self.y and
+            p.x <= b.x and
+            p.y <= b.y
+end
+
+--[[
+
+    A simple 2D bearing function, takes a and b,
+    returning the bearing to point b from point a.
+
+]]--
 function vecDef:bearing2D(b)
     local dist, delta = self:dist(b)
     return math.atan2(delta.x, delta.y), dist, delta
 end
 
+--[[
+
+    A human readability function.
+    round will state if the x/y/z axis should be rounded
+
+]]
 function vecDef:toString(round)
     if round == nil then round = false end
     local x,y,z = self:splitxyz(round)
-    str = "vector: [x="..x..", y="..y..", z="..x.."]"
+    str = "[x="..x..", y="..y..", z="..x.."]"
     return str
 end
 
+--[[
+
+    A quick way to get seperate x/y/z values.
+
+]]--
 function vecDef:splitxyz(round)
     if round then
         return math.floor(self.x+0.5), math.floor(self.y+0.5), math.floor(self.z+0.5)
@@ -121,6 +167,11 @@ function vecDef:z(a)
     return self.z 
 end
 
+--[[
+
+    A creation function
+
+]]--
 function Vector(x,y,z)
     if z == nil then z = 0 end
     if y == nil then y = 0 end
@@ -141,6 +192,11 @@ function Vector(x,y,z)
     return t
 end
 
+--[[
+
+    The creation function, but shorter. 
+
+]]--
 function v(x,y,z)
     return Vector(x,y,z)
 end

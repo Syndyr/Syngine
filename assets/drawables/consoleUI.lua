@@ -9,7 +9,7 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
         for I = 0, 10, 1 do
             
             if e.print[#e.print-(I+e.consoleLine)] == nil then break end
-            strn = strn..e.print[#e.print-(I+e.consoleLine)][1].."\n"
+            strn = strn..e.print[#e.print-(I+e.consoleLine)].."\n"
             
         end
         
