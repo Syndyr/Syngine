@@ -31,7 +31,7 @@ function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size,
     formatted = formatted + e.class.getBase("drawable", "engine")
     formatted.otherData = otherData
     table.insert(self.que[catagory], priority, formatted)
-    return self.que[catagory][priority].canvas
+    return {self.que[catagory][priority].canvas, self.que[catagory][priority]}
 end
 
 function e.drawQue.draw(dt)
@@ -71,27 +71,21 @@ function e.drawQue:init()
     e.hook:add("draw", "e_drawque", e.drawQue.draw)
     e.hook:add("resize", "e_updateCanvasSizes", e.drawQue.updateCanvasSizes)
 end
-
-function e.drawQue:activate(domaine, name)
-    for k,v in pairs(e.drawQue.que[domaine]) do
+function e.drawQue:get(domain, name)
+    for k,v in pairs(self.que[domain]) do
         if v.name == name then
-            v.doDraw = true
+            return v, k
         end
     end
+end
+function e.drawQue:activate(domaine, name)
+    e.drawQue:get(domain, name).doDraw = true
 end
 
 function e.drawQue:disable(domaine, name)
-    for k,v in pairs(e.drawQue.que[domaine]) do
-        if v.name == name then
-            v.doDraw = false
-        end
-    end
+    e.drawQue:get(domain, name).doDraw = false
 end
 
 function e.drawQue:toggle(domaine, name)
-    for k,v in pairs(e.drawQue.que[domaine]) do
-        if v.name == name then
-            v.doDraw = not v.doDraw
-        end
-    end
+    e.drawQue:get(domain, name).doDraw = not e.drawQue:get(domain, name).doDraw
 end

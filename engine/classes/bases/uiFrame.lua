@@ -9,7 +9,7 @@ FRAME.posIsWorldSpace = false
 FRAME.size = e.vpBounds
 
 function FRAME:getCanvas()
-    return self.canvas
+    return self.canvass
 end
 
 function FRAME:setDraw(bool)
@@ -18,29 +18,53 @@ function FRAME:setDraw(bool)
 end
 
 function FRAME:add(type, objectData)
-    table.insert(self.objects, e.class.getBase("ui"..type, "engine")+objectData )
+    local fData = e.class.getBase("uiObject", "engine")+objectData
+    if objectData.pos ~= nil then
+        fData.pos = objectData.pos
+    end
+    if objectData.type ~= nil then
+        fData.type = objectData.type
+    end
+    if objectData.data ~= nil then
+        fData.data = objectData.data
+    end
+    fData:init()
+    self.objects[#self.objects+1] = e.table.copy(fData)
 end
 
 function FRAME.drawMeta(dt, self)
+    
     local mp = love.mouse.getPosition()
     local preCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.canvas)
+    love.graphics.setCanvas(self.canvas[1])
     if self.posIsWorldSpace then
         mp = mp + e.vp
     end
     local br = self.pos+self.size
     local thinkButtons = self.pos:inBounds2D(br, mp)
-    print(Tserial.pack(self, true, true))
     e.ui.frames[self.otherData[1]].draw(dt, self)
-    if self.objects == nil then self.objects = {} end
-    for k,v in pairs(self.objects) do
-        v:draw(dt, self, thinkButtons)
+    local selfa = e.ui.frames[self.otherData[1]]
+    if selfa.objects == nil then selfa.objects = {} end
+    for k,v in pairs(selfa.objects) do
+        if v.draw ~= nil then
+            v.draw(dt, v, thinkButtons, k)
+        end
+        if e.ui.debug then
+            love.graphics.setColor(255,0,255)
+            love.graphics.rectangle("line", v.pos-Vector(1,1), v.size+Vector(2,2))
+            love.graphics.print(k, v.pos+Vector(v.size.x+4))
+        end
+    end
+    
+    if e.ui.debug then
+        love.graphics.setColor(255,0,255)
+        love.graphics.rectangle("line", v(), self.size)
     end
     love.graphics.setCanvas(preCanvas)
 end
 
 function FRAME.draw(dt, self)
-    love.graphics.rectangle("fill", v(125-62.5), v(125,62.5))
+    --love.graphics.rectangle("fill", v(125-62.5, 125-31.25), v(125,62.5))
 end
 
 return FRAME
