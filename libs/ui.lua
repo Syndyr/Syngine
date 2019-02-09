@@ -35,7 +35,7 @@ local objectData = {
         }
     }
 function objectData.data.value()
-    return math.floor(love.timer.getTime())
+    return {{255,0,0}, "r",{0,255,0}, "g",{0,0,255}, "b"}
 end
 e.ui.getFrame("test"):add("Value", objectData)
 

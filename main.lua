@@ -4,7 +4,7 @@ function love.load()
     
     e = {
         print = {}, 
-        _version = "0.1.0",
+        _version = "0.1.1-11.2",
         console = false, 
         consoleTyping = false, 
         consoleText = {}, 
@@ -47,7 +47,23 @@ function love.load()
         <folderName>.<filename> for anything in child folders 
     ]]--
     
-    
+    e.setColorNormalised = love.graphics.setColor
+    function love.graphics.setColor(r,g,b,a)
+        local arg = {r or 255,g or 255,b or 255,a or 255}
+        if(type(arg[1]) == "string") then return end
+        local r,g,b,a = 0,0,0,0
+        if type(arg[1]) == "table" then
+            --r,g,b,a = math.min(arg[1][1]/255, 1) or 0, math.min(arg[1][2]/255, 1) or 0, math.min(arg[1][3]/255, 1) or 0, math.min(arg[1][4]/255, 1) or 0
+            r = math.min(arg[1][1]/255, 1) or 0
+            g = math.min(arg[1][2]/255, 1) or 0
+            b = math.min(arg[1][3]/255, 1) or 0
+            a = math.min((arg[1][4] or 255)/255, 1) or 0
+        else
+            r,g,b,a = math.min(arg[1]/255, 1) or 0, math.min(arg[2]/255, 1) or 0, math.min(arg[3]/255, 1) or 0, math.min(arg[4]/255, 1) or 0
+        end
+        
+        e.setColorNormalised(r,g,b,a)
+    end
     
     g = setmetatable({
     }, {__index = e})
@@ -256,11 +272,14 @@ function love.keyreleased( key, unicode )
 end
 
 function love.mousepressed( x, y, button )
-    if button == "wd" then
+end
+
+function love.wheelmoved( x, y )
+    if y == -1 then
         if (e.consoleLine + 1) >  (#e.print - 10) then return false end
         e.consoleLine = e.consoleLine + 1
     end
-    if button == "wu" then
+    if y == 1 then
         if e.consoleLine - 1 < 0 then return false end
         e.consoleLine = e.consoleLine - 1
     end
