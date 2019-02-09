@@ -9,7 +9,7 @@ FRAME.posIsWorldSpace = false
 FRAME.size = e.vpBounds
 
 function FRAME:getCanvas()
-    return self.canvass
+    return self.canvas
 end
 
 function FRAME:setDraw(bool)
