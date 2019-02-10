@@ -24,7 +24,8 @@ return {
         {"image", "engine"},
         {"timer", "engine"},
         {"drawable", "engine"},
-        {"uiFrame", "engine"}
+        {"uiFrame", "engine"},
+        {"testPlayer", "engine"}
     },
     assets = {
         "tiles/noTex",

@@ -3,7 +3,7 @@ e.graphics = {}
 function e.graphics.arch(type, triangulate, pos, od, id, archStart, archEnd, segments, idIsPercentage)
     
     assert(pos ~= nil, "No position for the Arch!")
-    assert(getmetatable(pos) == getmetatable(v()), "Position isn't a vector!")
+    --assert(getmetatable(pos) == getmetatable(v()), "Position isn't a vector!")
     assert(od ~= nil, "No outer diameter for the Arch!")
     if od <= 0 then od = 1 end
     if id <= 0 then id = 0.5 end

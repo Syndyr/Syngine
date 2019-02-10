@@ -93,10 +93,10 @@ local vec = { --Method metatable for metamethods.
 ]]--
 function vecDef:dist(b) 
     if type(self) ~= "table" or type(self) ~= "table" or getmetatable(self) ~= vec then 
-        return 0 
+        return 0, v()
     else 
         if self.x == nil then 
-            return 0 
+            return 0, v()
         end
     end
     return math.sqrt((b.x-self.x)^2+(b.y-self.y)^2+(b.z-self.z)^2), v(b.x-self.x, b.y-self.y, b.z-self.z)
@@ -124,6 +124,17 @@ end
 function vecDef:bearing2D(b)
     local dist, delta = self:dist(b)
     return math.atan2(delta.x, delta.y), dist, delta
+end
+
+--[[
+    A tangent function that returns magic
+]]--
+function vecDef:tangent2D(b, dist)
+    
+    local bearing = self:bearing2D(b)-(math.pi*0.5)
+    local bearing2 = bearing + math.pi
+    return v(math.sin( bearing )*dist, math.cos( bearing )*dist )+self, v(math.sin( bearing2 )*dist, math.cos( bearing2 )*dist)+self
+    
 end
 
 --[[

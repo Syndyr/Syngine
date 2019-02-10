@@ -1,4 +1,4 @@
-e.olCirc = love.graphics.circle
+e.oldCirc = love.graphics.circle
 function love.graphics.circle(mode, pos, rad)
     
     e.oldCirc(mode, pos.x, pos.y, rad)

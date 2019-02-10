@@ -16,7 +16,8 @@ function love.load()
         mspeed = 500,
         introFade = 255,
         noGameFlash = false,
-        manifest = require "engine.manifest"
+        manifest = require "engine.manifest",
+        test = {}
     }
     e.fonts.arial18 = love.graphics.newFont("assets/fonts/arial.ttf", 18)
     --This is the engine table, all functions should go here.
@@ -142,48 +143,34 @@ function love.load()
         local a = v(0,100)+zero
         local b = v(math.sin(pi*0.125)*mDist, math.cos(pi*0.125)*mDist)+zero
         local c = v(math.sin(bearing)*100, math.cos(bearing)*100)+zero
-        
+        --[[
         local ca = v(math.sin(bearing-(pi*0.5))*25, math.cos(bearing-(pi*0.5))*25)+zero
         local bearingcaz = ca:bearing2D(zero)
             
         local cb = v(math.sin(bearingcaz)*25, math.cos(bearingcaz)*25)+zero
+        ]]--
+            
+        local ca, cb = zero:tangent2D(mPos, 12.5)
         
+        e.setColorNormalised(1,1,1,1)
+        --love.graphics.print(ca:toString().."\n"..cb:toString(), v(20,200))
+            
         if bearing >= 0 and bearing <= pi*0.125 then
             love.graphics.setColor(0,255,0,255)
         else
             love.graphics.setColor(255,0,0,255)
         end
-        e.olLine({
+        e.olLine({zero.x, zero.y, a.x, zero.y + mDist})
             
-            zero.x, zero.y,
-            a.x, zero.y + mDist
-                
-        })
-            
-        e.olLine({
-            
-            zero.x, zero.y,
-            b.x, b.y
-                
-        })
+        e.olLine({zero.x, zero.y, b.x, b.y})
             
         e.graphics.arch("line", false, v(200,200)+e.vp, mDist-50, mDist-60, 0, pi*0.125, 16, false)
         if bearing <= 0 then bearing = (bearing)+pi*2 end
         e.graphics.arch("line", false, v(200,200)+e.vp, mDist, mDist-10, 0, bearing, "dynamic", false)
            
         love.graphics.setColor(255,0,255,255)
-        e.olLine({
-            
-            zero.x, zero.y,
-            c.x, c.y
-                
-        })
-        e.olLine({
-            
-            ca.x, ca.y,
-            cb.x, cb.y
-                
-        })
+        e.olLine({zero.x, zero.y, c.x, c.y})
+        e.olLine({ca.x, ca.y, cb.x, cb.y})
          
         love.graphics.setColor(255,0,255,255)
     end)
@@ -212,6 +199,15 @@ function love.load()
     end)
     e.drawQue:init()
     e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
+    
+    e.test.player = e.class.getBase("testPlayer", "engine")
+    e.test.player:init()
+    e.hook:add("draw", "testPlayerThink", function() 
+        e.test.player:draw()
+    end)
+    e.hook:add("update", "testPlayerThink", function() 
+        e.test.player:think()
+    end)
 end
 
 function love.resize(x,y)
@@ -230,10 +226,12 @@ function love.update(dt)
     e.hook:run("update", dt)
     
     if e.console then return false end
+    
     if love.keyboard.isDown("s") then e.vp.y = e.vp.y-math.floor(e.mspeed*dt) end
     if love.keyboard.isDown("d") then e.vp.x = e.vp.x-math.floor(e.mspeed*dt) end
     if love.keyboard.isDown("w") then e.vp.y = e.vp.y+math.floor(e.mspeed*dt) end
     if love.keyboard.isDown("a") then e.vp.x = e.vp.x+math.floor(e.mspeed*dt) end
+    
 end
 
 function love.focus(bool)
