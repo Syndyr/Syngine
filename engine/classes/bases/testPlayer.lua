@@ -22,6 +22,8 @@ function P:think()
     self.facing = (self.pos+e.vp):bearing2D(mousePosWorld)
     
     local strafeLeft, strafeRight = (self.pos+e.vp):tangent2D(mousePosWorld, 200)
+    self.strafPos = {strafeLeft, strafeRight}
+    
     if love.keyboard.isDown("up") then
         self.pos = v( self.pos.x+((math.sin(self.facing)*100)*dt), self.pos.y+((math.cos(self.facing)*100)*dt) )
     end
@@ -29,10 +31,10 @@ function P:think()
         self.pos = v( self.pos.x-((math.sin(self.facing)*100)*dt), self.pos.y-((math.cos(self.facing)*100)*dt) )
     end
     if love.keyboard.isDown("left") then
-        self.pos = self.pos + ((strafeLeft-self.pos)*dt)
+        self.pos = self.pos + ((strafeLeft-(self.pos+e.vp))*dt)
     end
     if love.keyboard.isDown("right") then
-        self.pos = self.pos + ((strafeRight-self.pos)*dt)
+        self.pos = self.pos + ((strafeRight-(self.pos+e.vp))*dt)
     end
     
 end
@@ -60,5 +62,8 @@ function P:draw()
     if b*percentage < a then pMod = a end
     e.setColorNormalised(1,1-percentage,0,1)
     e.graphics.arch("fill", true, self.pos+e.vp, 33, 28, a, (b*percentage)+pMod, 16, false)
+    
+    e.setColorNormalised(1,0,1,1)
+    e.olLine(self.strafPos[1].x,self.strafPos[1].y,self.strafPos[2].x,self.strafPos[2].y)
 end
 return P
