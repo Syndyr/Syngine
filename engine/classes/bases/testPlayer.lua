@@ -3,8 +3,8 @@ local P = {}
 P.base = "e_base"
 P.pos = v(200,200)
 P.health = 100
-P.thirst = 100
-P.hunger = 100
+P.thirst = 27
+P.hunger = 54
 P.facing = 0
 
 function P:init()
@@ -21,7 +21,7 @@ function P:think()
     local mousePosWorld = love.mouse.getPosition()
     self.facing = (self.pos+e.vp):bearing2D(mousePosWorld)
     
-    local strafeLeft, strafeRight = self.pos:tangent2D(mousePosWorld, 200)
+    local strafeLeft, strafeRight = (self.pos+e.vp):tangent2D(mousePosWorld, 200)
     if love.keyboard.isDown("up") then
         self.pos = v( self.pos.x+((math.sin(self.facing)*100)*dt), self.pos.y+((math.cos(self.facing)*100)*dt) )
     end
