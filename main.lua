@@ -23,14 +23,30 @@ function love.load()
     --This is the engine table, all functions should go here.
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
-    
+        
     e.oldprint = print
     --Transport print to a different function as we want to hook into it
     
     function print(s)
         --We're making our own print function so it hooks into the console
+        
         if s == nil then s = "nil" end
         if type(s) ~= "string" then s = tostring(s) end
+        
+        if s:find("[^\r\n]+") ~= nil then
+            
+            for k in s:gmatch("[^\r\n]+") do    
+                --e.oldprint("\tTest\t"..k)
+                local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..k
+                e.oldprint(strn)
+                --Do a classic print
+
+                e.print[#e.print+1] = strn
+            end
+            
+            return false
+        end
+        
         --Some simple input sanitisation 
         local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..s
         e.oldprint(strn)
