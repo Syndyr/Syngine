@@ -1,14 +1,15 @@
 local P = {}
 
 P.base = "e_base"
+P.eid = 0
 P.pos = v(200,200)
 P.health = 100
-P.thirst = 27
-P.hunger = 54
+P.thirst = 0
+P.hunger = 0
 P.facing = 0
 
 function P:init()
-    e.timer:new("testPlayerStatTick", 1, true, false, function()
+    e.timer:new("testPlayerStatTick"..self.eid, 0.1, true, false, function()
         self.thirst = self.thirst + math.random(0,1)
         self.hunger = self.hunger + math.random(0,1)
         self.health = self.health - math.max(0, ((self.thirst+self.hunger-100)/100))
@@ -16,14 +17,14 @@ function P:init()
 end
 
 function P:think()
-    if self.health <= 0 then return false end
+    
     local dt = e.dt
     local mousePosWorld = love.mouse.getPosition()
     self.facing = (self.pos+e.vp):bearing2D(mousePosWorld)
     
     local strafeLeft, strafeRight = (self.pos+e.vp):tangent2D(mousePosWorld, 200)
     self.strafPos = {strafeLeft, strafeRight}
-    
+    if self.health <= 0 then return false end
     if love.keyboard.isDown("up") then
         self.pos = v( self.pos.x+((math.sin(self.facing)*100)*dt), self.pos.y+((math.cos(self.facing)*100)*dt) )
     end
@@ -65,5 +66,6 @@ function P:draw()
     
     e.setColorNormalised(1,0,1,1)
     e.olLine(self.strafPos[1].x,self.strafPos[1].y,self.strafPos[2].x,self.strafPos[2].y)
+    e.olLine(0+e.vp.x, 0+e.vp.y, self.pos.x+e.vp.x, self.pos.y+e.vp.y)
 end
 return P

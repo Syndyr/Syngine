@@ -30,27 +30,39 @@ function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size,
     local formatted =  {name = name, catagory = catagory, draw = drawFunc, doDraw = doDraw, pos = pos, size = size, canvas = love.graphics.newCanvas(size.x, size.y), upX = upX, upY = upY}
     formatted = formatted + e.class.getBase("drawable", "engine")
     formatted.otherData = otherData
+    print(Tserial.pack(formatted, true, true))
     table.insert(self.que[catagory], priority, formatted)
     return {self.que[catagory][priority].canvas, self.que[catagory][priority]}
 end
 
 function e.drawQue.draw(dt)
+    love.graphics.setCanvas()
     local lastCanvasUsed = love.graphics.getCanvas()
     for k,v in pairs(e.drawQue.que.other) do
         if v.doDraw then
             love.graphics.setCanvas(v.canvas)
+            love.graphics.clear(1,1,1,0)
             v.draw(dt,v)
             love.graphics.setCanvas(lastCanvasUsed)
+            if v.catagory ~= "other" then
+                break
+            end
             e.olDraw(v.canvas, v.pos.x, v.pos.y)
+            --e.olDraw(v.canvas, 200, 200)
         end
     end
     e.hook:run("e_drawCallAux", dt)
     for k,v in pairs(e.drawQue.que.ui) do
         if v.doDraw then
             love.graphics.setCanvas(v.canvas)
+            
+            
+            love.graphics.clear(1,1,1,0)
             v.draw(dt,v)
             love.graphics.setCanvas(lastCanvasUsed)
             e.olDraw(v.canvas, v.pos.x, v.pos.y)
+            --e.olDraw(v.canvas, 200, 200)
+            --print(k)
         end
     end
 end

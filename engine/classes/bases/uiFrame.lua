@@ -35,8 +35,6 @@ end
 function FRAME.drawMeta(dt, self)
     
     local mp = love.mouse.getPosition()
-    local preCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.canvas[1])
     if self.posIsWorldSpace then
         mp = mp + e.vp
     end
@@ -53,14 +51,15 @@ function FRAME.drawMeta(dt, self)
             love.graphics.setColor(255,0,255)
             love.graphics.rectangle("line", v.pos-Vector(1,1), v.size+Vector(2,2))
             love.graphics.print(k, v.pos+Vector(v.size.x+4))
+            love.graphics.setColor(255,255,255)
         end
     end
     
     if e.ui.debug then
         love.graphics.setColor(255,0,255)
         love.graphics.rectangle("line", v(), self.size)
+        love.graphics.setColor(255,255,255)
     end
-    love.graphics.setCanvas(preCanvas)
 end
 
 function FRAME.draw(dt, self)

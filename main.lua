@@ -199,15 +199,28 @@ function love.load()
     end)
     e.drawQue:init()
     e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
-    
-    e.test.player = e.class.getBase("testPlayer", "engine")
-    e.test.player:init()
-    e.hook:add("draw", "testPlayerThink", function() 
-        e.test.player:draw()
+    local i = 1
+    e.test.ents = {}
+    --[[
+    for i = 1, 20, 1 do
+        e.test.ents[i] = {} + e.table.copy(e.class.getBase("testPlayer", "engine"))
+        e.test.ents[i].eid = i
+        e.test.ents[i].pos = v(math.random(0, e.vpBounds.x), math.random(0, e.vpBounds.y))
+        e.test.ents[i]:init()
+        print(i)
+        
+    end
+    e.hook:add("draw", "testPlayerThink"..i, function() 
+        for k,v in pairs(e.test.ents) do
+            v:draw()
+        end
     end)
-    e.hook:add("update", "testPlayerThink", function() 
-        e.test.player:think()
+    e.hook:add("update", "testPlayerThink"..i, function() 
+        for k,v in pairs(e.test.ents) do
+            v:think()
+        end
     end)
+    ]]--
 end
 
 function love.resize(x,y)

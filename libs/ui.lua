@@ -22,10 +22,11 @@ function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     if upY == nil then upY = false end
     local formatted =  {name = name, catagory = "ui", draw = drawMeta, doDraw = doDraw, pos = pos, size = size, upX = upX, upY = upY}
     formatted = formatted + e.class.getBase("uiFrame", "engine")
-    formatted.canvas = e.drawQue:addNew(name, "ui", priority, formatted.drawMeta, formatted.doDraw, formatted.pos, formatted.size, formatted.upX, formatted.upY, {name})
+    formatted.canvas = e.drawQue:addNew(name, "ui", 0, formatted.drawMeta, true, formatted.pos, formatted.size, formatted.upX, formatted.upY, {name})
+    print(Tserial.pack(formatted, true, true))
     e.ui.frames[name] = e.class.getBase("uiFrame", "engine") + formatted
 end
-e.ui:createFrame("test", 1, true, v(200,200), v(250,250), false, false)
+e.ui:createFrame("test", 0, true, v(200,200), v(250,250), false, false)
 function e.ui.getFrame(name)
     return e.ui.frames[name]
 end
@@ -35,7 +36,7 @@ local objectData = {
         }
     }
 function objectData.data.value()
-    return {{255,0,0}, "r",{0,255,0}, "g",{0,0,255}, "b"}
+    return {{255,0,0}, "red",{0,255,0}, "green",{0,0,255}, "blue"}
 end
 e.ui.getFrame("test"):add("Value", objectData)
 
