@@ -108,7 +108,7 @@ end
     Checks if p[oint] is within a and b.
 
 ]]--
-function vecDef:inBounds2D(b, p )
+function vecDef:inBounds2D(b, p)
     return  p.x >= self.x and
             p.y >= self.y and
             p.x <= b.x and

@@ -22,12 +22,13 @@ function FRAME:add(type, objectData)
     if objectData.pos ~= nil then
         fData.pos = objectData.pos
     end
-    if objectData.type ~= nil then
-        fData.type = objectData.type
+    if type ~= nil then
+        fData.type = type
     end
     if objectData.data ~= nil then
         fData.data = objectData.data
     end
+    fData.frame = self
     fData:init()
     self.objects[#self.objects+1] = e.table.copy(fData)
 end
@@ -35,13 +36,12 @@ end
 function FRAME.drawMeta(dt, self)
     
     local mp = love.mouse.getPosition()
-    local preCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.canvas[1])
     if self.posIsWorldSpace then
         mp = mp + e.vp
     end
     local br = self.pos+self.size
     local thinkButtons = self.pos:inBounds2D(br, mp)
+    e.olLine(self.pos.x, self.pos.y, br.x, br.y)
     e.ui.frames[self.otherData[1]].draw(dt, self)
     local selfa = e.ui.frames[self.otherData[1]]
     if selfa.objects == nil then selfa.objects = {} end
@@ -53,14 +53,19 @@ function FRAME.drawMeta(dt, self)
             love.graphics.setColor(255,0,255)
             love.graphics.rectangle("line", v.pos-Vector(1,1), v.size+Vector(2,2))
             love.graphics.print(k, v.pos+Vector(v.size.x+4))
+            love.graphics.setColor(255,255,255)
         end
     end
     
     if e.ui.debug then
         love.graphics.setColor(255,0,255)
         love.graphics.rectangle("line", v(), self.size)
+        love.graphics.setColor(255,255,255)
     end
-    love.graphics.setCanvas(preCanvas)
+<<<<<<< HEAD
+    love.graphics.setColor(255,255,255)
+=======
+>>>>>>> e3a42a15a70dd842049ee78519cb034da72546e9
 end
 
 function FRAME.draw(dt, self)

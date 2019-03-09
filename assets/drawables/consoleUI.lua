@@ -1,11 +1,16 @@
 e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
     love.graphics.setBlendMode("alpha")
-    love.graphics.clear()
+    --love.graphics.clear()
+    local vpBounds = love.window.getDimensions()
+    local yOff = e.fonts.arial18:getHeight(strn)*11
+    local strn = ""
+    love.graphics.setFont(e.fonts.arial18)
+    love.graphics.setBlendMode("alpha")
     if e.console then
-        local vpBounds = love.window.getDimensions()
-        love.graphics.setBackgroundColor({0,0,0,0})
+        
+        
         local I = 0
-        local strn = ""
+        
         for I = 0, 10, 1 do
             
             if e.print[#e.print-(I+e.consoleLine)] == nil then break end
@@ -13,10 +18,10 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
             
         end
         
-        local yOff = e.fonts.arial18:getHeight(strn)*11
+        
         local context = "Lua: \t"..table.concat(e.consoleText)
         
-        love.graphics.setColor({64,64,64,200})
+        love.graphics.setColor({64,64,64,28})
         love.graphics.rectangle("fill", v(0,0), v(vpBounds.x, yOff+35))
         love.graphics.rectangle("fill", v(0,yOff+40), v(vpBounds.x, e.fonts.arial18:getHeight(strn)+5 ))
         
@@ -32,19 +37,17 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
                 e.vpBounds.x, yOff+30
             }
         )
-        
+        end
         love.graphics.setColor({64,64,64})
         love.graphics.print(strn, v(10,10), 0, v(1,1))
         love.graphics.setColor({255,255,200})
         love.graphics.print(strn, v(11,11), 0, v(1,1))
         love.graphics.setColor({255,255,255})
-        love.graphics.setCanvas()
         
         love.graphics.setColor({255,255,255,255})
-        love.graphics.setBlendMode("alpha")
         
             
-        love.graphics.setColor({64,64,64,128})
+        love.graphics.setColor({64,64,64,28})
         love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-10), v(e.vpBounds.x, e.fonts.arial18:getHeight(strn)+10))
         
         love.graphics.setColor({255,255,255,128})
@@ -68,5 +71,4 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
         love.graphics.setColor({255,255,200})
         love.graphics.print(context, v(e.vpBounds.x-e.fonts.arial18:getWidth(context)-4, e.vpBounds.y-e.fonts.arial18:getHeight(strn)-2), 0, v(1,1))
         love.graphics.setColor({255,255,255,255})
-    end
-end, true, v(), v(love.window.getDimensions().x, 45+(e.fonts.arial18:getHeight(strn)*12)), true, false)
+end, true, v(), v(1080,800), true, true)

@@ -23,14 +23,30 @@ function love.load()
     --This is the engine table, all functions should go here.
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
-    
+        
     e.oldprint = print
     --Transport print to a different function as we want to hook into it
     
     function print(s)
         --We're making our own print function so it hooks into the console
+        
         if s == nil then s = "nil" end
         if type(s) ~= "string" then s = tostring(s) end
+        
+        if s:find("[^\r\n]+") ~= nil then
+            
+            for k in s:gmatch("[^\r\n]+") do    
+                --e.oldprint("\tTest\t"..k)
+                local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..k
+                e.oldprint(strn)
+                --Do a classic print
+
+                e.print[#e.print+1] = strn
+            end
+            
+            return false
+        end
+        
         --Some simple input sanitisation 
         local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..s
         e.oldprint(strn)
@@ -86,28 +102,16 @@ function love.load()
                 
                 lfs = "love.main"
                 
-                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
-                print("----------")
-                print("")
+                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)\n----------\n")
             end
         end
         --e.moonshine = require "libs.thirdParty.moonshine27122018"
-        print("Loading bases..")
-        print("")
-        print("----------")
-        print("")
+        print("Loading bases..\n----------\n")
         for k,v in pairs(e.manifest.bases) do
             print("Importing base: "..v[1].." from domain: "..v[2])
             e.class.getBase(v[1], v[2])
         end
-        print("")
-        print("----------")
-        print("")
-        print("Bases loaded.")
-        print("Loading assets..")
-        print("")
-        print("----------")
-        print("")
+        print("\n----------\nBases loaded.\nLoading assets..\n----------\n")
         for k,v in pairs(e.manifest.assets) do
             print("Getting asset: "..v)
             e.asset:load(v)
@@ -115,11 +119,7 @@ function love.load()
         print("")
         print("----------")
         print("")
-        print("Assets loaded.")
-        print("Loading drawables..")
-        print("")
-        print("----------")
-        print("")
+        print("\n----------\nAssets loaded.\nLoading drawables..\n----------\n")
         for k,v in pairs(e.manifest.drawables) do
             print("Getting drawable: "..v)
             require("assets.drawables."..v)
@@ -199,15 +199,28 @@ function love.load()
     end)
     e.drawQue:init()
     e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
-    
-    e.test.player = e.class.getBase("testPlayer", "engine")
-    e.test.player:init()
-    e.hook:add("draw", "testPlayerThink", function() 
-        e.test.player:draw()
+    local i = 1
+    e.test.ents = {}
+    --[[
+    for i = 1, 20, 1 do
+        e.test.ents[i] = {} + e.table.copy(e.class.getBase("testPlayer", "engine"))
+        e.test.ents[i].eid = i
+        e.test.ents[i].pos = v(math.random(0, e.vpBounds.x), math.random(0, e.vpBounds.y))
+        e.test.ents[i]:init()
+        print(i)
+        
+    end
+    e.hook:add("draw", "testPlayerThink"..i, function() 
+        for k,v in pairs(e.test.ents) do
+            v:draw()
+        end
     end)
-    e.hook:add("update", "testPlayerThink", function() 
-        e.test.player:think()
+    e.hook:add("update", "testPlayerThink"..i, function() 
+        for k,v in pairs(e.test.ents) do
+            v:think()
+        end
     end)
+    ]]--
 end
 
 function love.resize(x,y)
@@ -266,7 +279,6 @@ function love.visible(visible)
 end
 
 function love.keyreleased( key, unicode )
-	
 end
 
 function love.mousepressed( x, y, button )
