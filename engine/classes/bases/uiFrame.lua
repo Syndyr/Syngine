@@ -28,7 +28,7 @@ function FRAME:add(type, objectData)
     if objectData.data ~= nil then
         fData.data = objectData.data
     end
-    fData.frame = self
+    fData.frame = setmetatable({}, {__index = self})
     fData:init()
     self.objects[#self.objects+1] = e.table.copy(fData)
 end
@@ -41,13 +41,17 @@ function FRAME.drawMeta(dt, self)
     end
     local br = self.pos+self.size
     local thinkButtons = self.pos:inBounds2D(br, mp)
+    love.graphics.setColor(255,0,0)
+    if thinkButtons then love.graphics.setColor(0,255,0) end
+    --love.graphics.print(mp:toString().."\n", mp-self.pos)
     e.olLine(self.pos.x, self.pos.y, br.x, br.y)
+    love.graphics.setColor(255,255,255)
     e.ui.frames[self.otherData[1]].draw(dt, self)
     local selfa = e.ui.frames[self.otherData[1]]
     if selfa.objects == nil then selfa.objects = {} end
     for k,v in pairs(selfa.objects) do
         if v.draw ~= nil then
-            v.draw(dt, v, thinkButtons, k)
+            v.draw(dt, v, thinkButtons, k, self)
         end
         if e.ui.debug then
             love.graphics.setColor(255,0,255)

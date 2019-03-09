@@ -26,7 +26,7 @@ function UI:init()
         input = {},
         dialdisplay = {}
     }
-    function funcArray.value.draw(dt, selfa, buttonThink, k)
+    function funcArray.value.draw(dt, selfa, buttonThink, k, self)
         if selfa.data.value == nil then selfa.data.value = function() return "No value" end end
         love.graphics.setFont(e.fonts.arial18)
         love.graphics.setColor(selfa.colors.secondary)
@@ -51,23 +51,28 @@ function UI:init()
         love.graphics.print(strin, selfa.pos+v(xoff, (selfa.size.y/2)-(e.fonts.arial18:getHeight()/2)))
     end
     
-    function funcArray.button.draw(dt, selfa, buttonThink, k)
-        funcArray.value.draw(dt, selfa, buttonThink, k)
+    function funcArray.button.draw(dt, selfa, buttonThink, k, self)
+        funcArray.value.draw(dt, selfa, buttonThink, k, self)
         
         
         if buttonThink then
             --print(Tserial.pack(selfa, true, true))
             local mpos = love.mouse.getPosition()
-            local tl, br = selfa.pos, selfa.pos+selfa.size
+            local tl, br = selfa.frame.pos+selfa.pos, selfa.frame.pos+selfa.pos+selfa.size
             local isHovering = tl:inBounds2D(br, mpos)
+            
+            love.graphics.setColor(255,0,0)
+            if thinkButtons then love.graphics.setColor(0,255,0) end
+            
+            love.graphics.print(selfa.frame.pos:toString().."\n"..selfa.frame.size:toString(), v(10,64))
+            
+            love.graphics.circle("fill", mpos-selfa.frame.pos, 10)
+            
+            love.graphics.setColor(255,255,255)
             if isHovering then
                 love.graphics.print(tl:toString().."\n"..br:toString(), mpos)
 
                 love.graphics.rectangle("fill", selfa.pos, selfa.size)
-                local heck = love.graphics.getCanvas()
-                love.graphics.setCanvas(e.drawQue.que.ui[2].canvas)
-                love.graphics.rectangle("fill", tl, br-tl)
-                love.graphics.setCanvas(heck)
             end
             
         end

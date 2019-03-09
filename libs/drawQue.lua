@@ -58,7 +58,6 @@ function e.drawQue.draw(dt)
             v.draw(dt,v)
             love.graphics.setCanvas(lastCanvasUsed)
             e.olDraw(v.canvas, v.pos.x, v.pos.y)
-            if v.name == "test" then print(v.pos:toString()) end
         end
     end
 end
