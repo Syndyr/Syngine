@@ -48,14 +48,12 @@ function e.drawQue.draw(dt)
                 break
             end
             e.olDraw(v.canvas, v.pos.x, v.pos.y)
-            if v.name == "test" then print(v.pos:toString()) end
         end
     end
     e.hook:run("e_drawCallAux", dt)
     for k,v in pairs(e.drawQue.que.ui) do
         if v.doDraw then
             love.graphics.setCanvas(v.canvas)
-            
             love.graphics.clear(1,1,1,0)
             v.draw(dt,v)
             love.graphics.setCanvas(lastCanvasUsed)
