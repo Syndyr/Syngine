@@ -102,28 +102,16 @@ function love.load()
                 
                 lfs = "love.main"
                 
-                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
-                print("----------")
-                print("")
+                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)\n----------\n")
             end
         end
         --e.moonshine = require "libs.thirdParty.moonshine27122018"
-        print("Loading bases..")
-        print("")
-        print("----------")
-        print("")
+        print("Loading bases..\n----------\n")
         for k,v in pairs(e.manifest.bases) do
             print("Importing base: "..v[1].." from domain: "..v[2])
             e.class.getBase(v[1], v[2])
         end
-        print("")
-        print("----------")
-        print("")
-        print("Bases loaded.")
-        print("Loading assets..")
-        print("")
-        print("----------")
-        print("")
+        print("\n----------\nBases loaded.\nLoading assets..\n----------\n")
         for k,v in pairs(e.manifest.assets) do
             print("Getting asset: "..v)
             e.asset:load(v)
@@ -131,11 +119,7 @@ function love.load()
         print("")
         print("----------")
         print("")
-        print("Assets loaded.")
-        print("Loading drawables..")
-        print("")
-        print("----------")
-        print("")
+        print("\n----------\nAssets loaded.\nLoading drawables..\n----------\n")
         for k,v in pairs(e.manifest.drawables) do
             print("Getting drawable: "..v)
             require("assets.drawables."..v)
