@@ -62,10 +62,7 @@ function FRAME.drawMeta(dt, self)
         love.graphics.rectangle("line", v(), self.size)
         love.graphics.setColor(255,255,255)
     end
-<<<<<<< HEAD
     love.graphics.setColor(255,255,255)
-=======
->>>>>>> e3a42a15a70dd842049ee78519cb034da72546e9
 end
 
 function FRAME.draw(dt, self)

@@ -24,13 +24,7 @@ function P:think()
     
     local strafeLeft, strafeRight = (self.pos+e.vp):tangent2D(mousePosWorld, 200)
     self.strafPos = {strafeLeft, strafeRight}
-<<<<<<< HEAD
-    
     if self.health <= 0 then return false end
-    
-=======
-    if self.health <= 0 then return false end
->>>>>>> e3a42a15a70dd842049ee78519cb034da72546e9
     if love.keyboard.isDown("up") then
         self.pos = v( self.pos.x+((math.sin(self.facing)*100)*dt), self.pos.y+((math.cos(self.facing)*100)*dt) )
     end

@@ -28,10 +28,6 @@ function UI:init()
     }
     function funcArray.value.draw(dt, selfa, buttonThink, k)
         if selfa.data.value == nil then selfa.data.value = function() return "No value" end end
-<<<<<<< HEAD
-        
-=======
->>>>>>> e3a42a15a70dd842049ee78519cb034da72546e9
         love.graphics.setFont(e.fonts.arial18)
         love.graphics.setColor(selfa.colors.secondary)
         love.graphics.rectangle("fill", selfa.pos, selfa.size)
