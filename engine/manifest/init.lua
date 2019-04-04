@@ -16,6 +16,7 @@ return {
             "assets",
             "graphics",
             "drawQue",
+            "keys",
             "ui"
         }
     },

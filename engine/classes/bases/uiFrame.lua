@@ -22,6 +22,12 @@ function FRAME:add(type, objectData)
     if objectData.pos ~= nil then
         fData.pos = objectData.pos
     end
+    if objectData.size ~= nil then
+        fData.size = objectData.size
+    end
+    if objectData.data.doDrawn ~= nil then
+        fData.data.doDrawn = objectData.data.doDrawn
+    end
     if type ~= nil then
         fData.type = type
     end
@@ -43,8 +49,6 @@ function FRAME.drawMeta(dt, self)
     local thinkButtons = self.pos:inBounds2D(br, mp)
     love.graphics.setColor(255,0,0)
     if thinkButtons then love.graphics.setColor(0,255,0) end
-    --love.graphics.print(mp:toString().."\n", mp-self.pos)
-    e.olLine(self.pos.x, self.pos.y, br.x, br.y)
     love.graphics.setColor(255,255,255)
     e.ui.frames[self.otherData[1]].draw(dt, self)
     local selfa = e.ui.frames[self.otherData[1]]
@@ -56,7 +60,7 @@ function FRAME.drawMeta(dt, self)
         if e.ui.debug then
             love.graphics.setColor(255,0,255)
             love.graphics.rectangle("line", v.pos-Vector(1,1), v.size+Vector(2,2))
-            love.graphics.print(k, v.pos+Vector(v.size.x+4))
+            love.graphics.print(k.." "..v.size:toString(), v.pos+Vector(v.size.x+4))
             love.graphics.setColor(255,255,255)
         end
     end

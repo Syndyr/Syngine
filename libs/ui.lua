@@ -1,5 +1,6 @@
 e.ui = {
     frames = {},
+    buttonCatch = false,
     debug = true
 }
 
@@ -26,10 +27,13 @@ function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     print(Tserial.pack(formatted, true, true))
     e.ui.frames[name] = formatted
 end
-e.ui:createFrame("test", 0, true, v(200,200), v(250,250), false, false)
+
 function e.ui.getFrame(name)
     return e.ui.frames[name]
 end
+
+--[[
+
 local objectData = {
         centered = false, 
         data = {
@@ -41,20 +45,27 @@ end
 e.ui.getFrame("test"):add("Value", objectData)
 
 objectData = {
-        centered = true, 
-        pos = v(0,32),
+        centered = false, 
+        pos = v(0,64),
+        size = v(140, 30),
         data = {
+            toggleVar = function()
+                
+                e.ui.debug = not e.ui.debug
+                return e.ui.debug
+            
+            end,
+            checkStat = e.ui.debug
         }
     }
 function objectData.data.value()
-    return math.random(0,1000)
+    local col = {255,0,0}
+    if e.ui.debug then col = {0,255,0} end
+    return {col, "UI DEBUG"}
 end
 
-e.ui.getFrame("test"):add("Button", objectData)
+e.ui.getFrame("test"):add("Check", objectData)
 
-
-
---[[
 function frame:removeFrame()
     frame = nil
 end

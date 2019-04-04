@@ -18,12 +18,13 @@ e.drawQue:addNew("e_noGameScreen", "other", 0, function(dt)
         end
     end
         
+    if not e.test.flash then return false end
     local splash = e.asset:get("image", "engine_splash")
     
-    --e.olDraw(splash.image, splash.tiles.engine_default, (vpBounds.x/2)-512, (vpBounds.y/2)-89)
+    e.olDraw(splash.image, splash.tiles.engine_default, (vpBounds.x/2)-512, (vpBounds.y/2)-89)
         
     if e.noGameFlash then
-    --    e.olDraw(splash.image, splash.tiles.engine_noGame, (vpBounds.x/2)-512, (vpBounds.y/2)+89)
+        e.olDraw(splash.image, splash.tiles.engine_noGame, (vpBounds.x/2)-512, (vpBounds.y/2)+89)
     end
     
 end, true, v(), v(love.window.getDimensions().x, love.window.getDimensions().y), true, true)

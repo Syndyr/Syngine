@@ -17,7 +17,10 @@ function love.load()
         introFade = 255,
         noGameFlash = false,
         manifest = require "engine.manifest",
-        test = {}
+        test = {
+            flash = true,
+            bottomBar = true
+        }
     }
     e.fonts.arial18 = love.graphics.newFont("assets/fonts/arial.ttf", 18)
     --This is the engine table, all functions should go here.
@@ -134,6 +137,7 @@ function love.load()
     --Has to be set after the vector library is loaded or bad you'll have a bad day
     
     e.hook:add("e_drawCallAux", "bearingTest", function()
+        if not e.test.radiusTest then return false end
         local screenCenter = e.vpBounds/2
         local mPos = love.mouse.getPosition()
         local pi = math.pi
@@ -296,6 +300,7 @@ function love.wheelmoved( x, y )
 end
 
 function love.mousereleased( x, y, button )
+    e.ui.buttonCatch = false
 end
 
 function love.quit()
