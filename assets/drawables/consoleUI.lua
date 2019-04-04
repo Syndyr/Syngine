@@ -27,7 +27,7 @@ e.ui.getFrame("dev_buttons"):add("Check", objectData)
 
 objectData = {
         centered = false, 
-        pos = v(0,32),
+        pos = v(0,26),
         size = v(140, 30),
         data = {
             toggleVar = function()
@@ -51,7 +51,7 @@ e.ui.getFrame("dev_buttons"):add("Check", objectData)
 
 objectData = {
         centered = false, 
-        pos = v(0,64),
+        pos = v(0,52),
         size = v(140, 30),
         data = {
             toggleVar = function()
@@ -75,7 +75,7 @@ e.ui.getFrame("dev_buttons"):add("Check", objectData)
 
 objectData = {
         centered = false, 
-        pos = v(0,96),
+        pos = v(0,78),
         size = v(140, 30),
         data = {
             toggleVar = function()

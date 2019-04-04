@@ -18,7 +18,6 @@ UI.data = {}
 
 function UI:init()
     local funcArray = {
-        
         value = {},
         button = {},
         check = {},
@@ -130,8 +129,6 @@ function UI:init()
         end
         love.graphics.setColor(col)
         love.graphics.rectangle("fill", v(selfa.pos.x+selfa.size.x-20, selfa.pos.y+((selfa.size.y/2)-5.5)), v(11,11))
-        
-        
         
         if buttonThink then
             local mpos = love.mouse.getPosition()
