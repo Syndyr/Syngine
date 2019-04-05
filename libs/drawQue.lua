@@ -30,7 +30,6 @@ function e.drawQue:addNew(name, catagory, priority, drawFunc, doDraw, pos, size,
     local formatted =  {name = name, catagory = catagory, draw = drawFunc, doDraw = doDraw, pos = pos, size = size, canvas = love.graphics.newCanvas(size.x, size.y), upX = upX, upY = upY}
     formatted = formatted + e.class.getBase("drawable", "engine")
     formatted.otherData = otherData
-    print(Tserial.pack(formatted, true, true))
     table.insert(self.que[catagory], priority, formatted)
     return {self.que[catagory][priority].canvas, self.que[catagory][priority]}
 end

@@ -24,7 +24,6 @@ function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     local formatted =  {name = name, catagory = "ui", draw = drawMeta, doDraw = doDraw, pos = pos, size = size, upX = upX, upY = upY}
     formatted = formatted + e.class.getBase("uiFrame", "engine")
     formatted.canvas = e.drawQue:addNew(name, "ui", 0, formatted.drawMeta, true, formatted.pos, formatted.size, formatted.upX, formatted.upY, {name})
-    print(Tserial.pack(formatted, true, true))
     e.ui.frames[name] = formatted
 end
 
