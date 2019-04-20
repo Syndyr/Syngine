@@ -31,7 +31,7 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     local x = selfa.pos.x+(e.fonts.arial18:getWidth(selfa.data.limits[1]))+10
     local z = (selfa.size.x-x)-5-(e.fonts.arial18:getWidth(selfa.data.limits[2]))
     local zx = z-x
-    local slidepos = x+(zx/selfa.data.limits[2])*b
+    local slidepos = math.max(math.min(x+(zx/selfa.data.limits[2])*b, z), x)
     
     e.olLine({
         
