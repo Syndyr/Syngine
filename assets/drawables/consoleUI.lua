@@ -97,6 +97,30 @@ function objectData.data.doDrawn()
 end
 e.ui.getFrame("dev_buttons"):add("Check", objectData)
 
+
+objectData = {
+        centered = false, 
+        pos = v(0,104),
+        size = v(200, 60),
+        data = {
+            limits = {0, 1000},
+            hasSet = true,
+            checkStat = e.test.bottomBar
+        }
+    }
+function objectData.data.value()
+    return "mspeed", e.mspeed
+end
+function objectData.data.doDrawn()
+    return e.console
+end
+function objectData.data.setVar(var)
+    e.mspeed = var
+end
+e.ui.getFrame("dev_buttons"):add("Slider", objectData)
+
+
+
 e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
     love.graphics.setBlendMode("alpha")
     --love.graphics.clear()
