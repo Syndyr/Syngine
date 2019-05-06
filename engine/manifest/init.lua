@@ -17,7 +17,8 @@ return {
             "graphics",
             "drawQue",
             "keys",
-            "ui"
+            "ui",
+            "misc"
         }
     },
     bases = {

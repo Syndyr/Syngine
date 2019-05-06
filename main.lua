@@ -18,8 +18,9 @@ function love.load()
         noGameFlash = false,
         manifest = require "engine.manifest",
         test = {
-            flash = true,
-            bottomBar = true
+            flash = false,
+            bottomBar = true,
+            radiusTest = true
         }
     }
     e.fonts.arial18 = love.graphics.newFont("assets/fonts/arial.ttf", 18)
@@ -83,6 +84,7 @@ function love.load()
         end
         
         e.setColorNormalised(r,g,b,a)
+        
     end
     
     g = setmetatable({
@@ -168,9 +170,9 @@ function love.load()
             
         e.olLine({zero.x, zero.y, b.x, b.y})
             
-        e.graphics.arch("line", false, v(200,200)+e.vp, mDist-50, mDist-60, 0, pi*0.125, 16, false)
+        e.graphics.arch("fill", true, v(200,200)+e.vp, mDist-50, mDist-60, 0, pi*0.125, 16, false)
         if bearing <= 0 then bearing = (bearing)+pi*2 end
-        e.graphics.arch("line", false, v(200,200)+e.vp, mDist, mDist-10, 0, bearing, "dynamic", false)
+        e.graphics.arch("line", true, v(200,200)+e.vp, mDist, mDist-10, 0, bearing, "dynamic", false)
            
         love.graphics.setColor(255,0,255,255)
         e.olLine({zero.x, zero.y, c.x, c.y})
@@ -232,8 +234,13 @@ function love.resize(x,y)
     e.vpBounds.y = y
     e.hook:run("resize", e.vpBounds)
 end
-
+local lineOnce = false
 function love.draw()
+    if not lineOnce then
+        love.graphics.setLineStyle("smooth")
+        love.graphics.setLineJoin("none")
+        lineOnce = true
+    end
     love.graphics.setFont(e.fonts.arial18)
     e.hook:run("draw")
 end

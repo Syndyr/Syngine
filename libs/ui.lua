@@ -1,7 +1,7 @@
 e.ui = {
     frames = {},
     buttonCatch = false,
-    debug = true
+    debug = false
 }
 
 function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
