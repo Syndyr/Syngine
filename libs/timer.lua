@@ -3,11 +3,12 @@ print("Setting S table.")
 e.timer = {
     timers = {
         
-    }
+    },
+    timeFunction = love.timer.getTime
 }
 
 function e.timer:new(name, delay, startActive, selfDestruct, funca)
-    local timerNow = love.timer.getTime()
+    local timerNow = e.timer.timeFunction()
     local timerOverrides = { 
         name = name, 
         timeMade =  timerNow,
@@ -21,7 +22,7 @@ function e.timer:new(name, delay, startActive, selfDestruct, funca)
 end
 
 function e.timer:run()
-    local timeNow = love.timer.getTime()
+    local timeNow = e.timer.timeFunction()
     for k,v in pairs(e.timer.timers) do
         if v.active == true then
             local timeDif = v.timeDue - timeNow
