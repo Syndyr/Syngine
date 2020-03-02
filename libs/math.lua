@@ -27,4 +27,10 @@ function e.math.round(val, decimal)
     return math.ceil(val * exp - 0.5) / exp
 end
 
+function e.math.maxmin(a,upper,lower)
+    
+    return math.max(math.min(a, upper), lower)
+    
+end
+
 print("libs.math done.")
