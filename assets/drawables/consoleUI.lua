@@ -115,7 +115,7 @@ function objectData.data.doDrawn()
     return e.console
 end
 function objectData.data.setVar(var)
-    e.mspeed = var
+    e.mspeed = math.floor(var+0.5)
 end
 e.ui.getFrame("dev_buttons"):add("Slider", objectData)
 
