@@ -109,7 +109,7 @@ objectData = {
         }
     }
 function objectData.data.value()
-    return "mspeed", e.mspeed
+    return "Movement speed", e.mspeed
 end
 function objectData.data.doDrawn()
     return e.console
