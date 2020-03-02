@@ -8,6 +8,12 @@ FRAME.pos = v()
 FRAME.posIsWorldSpace = false
 FRAME.size = e.vpBounds
 
+function FRAME:getMousePos()
+    local mpos = love.mouse.getPosition()
+    local solved = mpos - self.pos
+    return solved
+end
+
 function FRAME:getCanvas()
     return self.canvas
 end
@@ -60,7 +66,7 @@ function FRAME.drawMeta(dt, self)
         if e.ui.debug then
             love.graphics.setColor(255,0,255)
             love.graphics.rectangle("line", v.pos-Vector(1,1), v.size+Vector(2,2))
-            love.graphics.print(k.." "..v.size:toString(), v.pos+Vector(v.size.x+4))
+            love.graphics.print(k.." "..v.pos:toString(), v.pos+Vector(v.size.x+4))
             love.graphics.setColor(255,255,255)
         end
     end
