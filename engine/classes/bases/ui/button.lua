@@ -28,8 +28,8 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     love.graphics.print(strin, selfa.pos+v(xoff, (selfa.size.y/2)-(e.fonts.arial18:getHeight()/2)))
     
     if buttonThink then
-        local mpos = love.mouse.getPosition()
-        local tl, br = selfa.frame.pos+selfa.pos, selfa.frame.pos+selfa.pos+selfa.size
+        local mpos = selfa.frame:getMousePos()
+        local tl, br = selfa.pos, selfa.pos+selfa.size
         local isHovering = tl:inBounds2D(br, mpos)
         
         if isHovering then

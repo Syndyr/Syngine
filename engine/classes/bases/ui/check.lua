@@ -50,8 +50,8 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     love.graphics.rectangle("fill", v(selfa.pos.x+selfa.size.x-20, selfa.pos.y+((selfa.size.y/2)-5.5)), v(11,11))
     
     if buttonThink then
-        local mpos = love.mouse.getPosition()
-        local tl, br = selfa.frame.pos+selfa.pos, selfa.frame.pos+selfa.pos+selfa.size
+        local mpos = selfa.frame:getMousePos()
+        local tl, br = selfa.pos, selfa.pos+selfa.size
         local isHovering = tl:inBounds2D(br, mpos)
         
         if isHovering then
