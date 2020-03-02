@@ -18,6 +18,7 @@ return {
             "drawQue",
             "keys",
             "ui",
+            "fuz",
             "misc"
         }
     },
