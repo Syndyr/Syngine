@@ -12,6 +12,7 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     love.graphics.setFont(e.fonts.arial18)
     love.graphics.setColor(selfa.colors.secondary)
     love.graphics.rectangle("fill", selfa.pos, selfa.size)
+    
     love.graphics.setColor(selfa.colors.primary)
     love.graphics.rectangle("line", selfa.pos+v(2,2), selfa.size-v(4,4))
     love.graphics.setColor(selfa.colors.terciary)
@@ -28,10 +29,16 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     love.graphics.print(strin.."  "..b, selfa.pos+(v(xoff,8)-5))
     
     love.graphics.setLineWidth(3)
+    local mpos = selfa.frame:getMousePos()
+    
+    
     local x = selfa.pos.x+(e.fonts.arial18:getWidth(selfa.data.limits[1]))+10
     local z = (selfa.size.x-x)-5-(e.fonts.arial18:getWidth(selfa.data.limits[2]))
     local zx = z-x
-    local slidepos = math.max(math.min(x+(zx/selfa.data.limits[2])*b, z), x)
+    
+    local scaleMod = x+(zx/selfa.data.limits[2])*b
+    
+    local slidepos = math.max(math.min(scaleMod, z), x)
     
     e.olLine({
         
@@ -39,12 +46,35 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
             z, selfa.pos.y+selfa.size.y-(xoff*2)
         
         })
+    local ypos = selfa.pos.y+selfa.size.y-(xoff*2)
+    local xMod = 0
+    if buttonThink then
+        if fuzzyeq(mpos.x, slidepos, 3) and fuzzyeq(mpos.y, ypos, 10) or selfa.dragging then 
+            love.graphics.setLineWidth(5)
+            love.graphics.setColor(40,128,40,255)
+
+            if love.mouse.isDown(e.keys.__leftMouseButton__) then
+                xMod = mpos.x - slidepos
+                local calcedVar = e.math.maxmin(((slidepos+xMod-x)/zx)*selfa.data.limits[2], selfa.data.limits[2], selfa.data.limits[1])
+
+                selfa.data.setVar(calcedVar)
+
+                selfa.dragging = true
+                e.ui.buttonCatch = true
+            else
+                selfa.dragging = false
+
+            end
+
+        end
+    end
     e.olLine({
         
-            slidepos, selfa.pos.y+selfa.size.y-(xoff*2)-10,
-            slidepos, selfa.pos.y+selfa.size.y-(xoff*2)+10
+            e.math.maxmin(slidepos+xMod, z, x), ypos-10,
+            e.math.maxmin(slidepos+xMod, z, x), ypos+10
         
         })
+    love.graphics.setColor(col)
     love.graphics.setLineWidth(1)
     
     love.graphics.print(selfa.data.limits[1], v(5, selfa.pos.y+selfa.size.y-(xoff*3)))
