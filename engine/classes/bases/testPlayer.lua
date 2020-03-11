@@ -64,8 +64,10 @@ function P:draw()
     e.setColorNormalised(1,1-percentage,0,1)
     e.graphics.arch("fill", true, self.pos+e.vp, 33, 28, a, (b*percentage)+pMod, 16, false)
     
-    e.setColorNormalised(1,0,1,1)
-    e.olLine(self.strafPos[1].x,self.strafPos[1].y,self.strafPos[2].x,self.strafPos[2].y)
-    e.olLine(0+e.vp.x, 0+e.vp.y, self.pos.x+e.vp.x, self.pos.y+e.vp.y)
+    if e.ui.debug then
+        e.setColorNormalised(1,0,1,1)
+        e.olLine(self.strafPos[1].x,self.strafPos[1].y,self.strafPos[2].x,self.strafPos[2].y)
+        e.olLine(0+e.vp.x, 0+e.vp.y, self.pos.x+e.vp.x, self.pos.y+e.vp.y)
+    end
 end
 return P
