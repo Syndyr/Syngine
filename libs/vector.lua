@@ -1,20 +1,23 @@
-print("Setting Vector table.")
 --[[
 
     This is the vector metatype library.
-    It purpose is to add a simple vector implimentation to
+    Its purpose is to add a simple vector implimentation to
     Lua, specifically for use within graphics and/or game engines.
     This is a purely Lua implimentation.
 
 ]]--
-local vecDef = {} --Index metatable for functions, saves a little on mem use.
+local vecDef = {}
+				--I've had to break it up like this since some Lua versions 
+				--throw a hissy-fit if the method table and function table
+				--are the same table. Go figure.
 local vec = { --Method metatable for metamethods.
     __index = vecDef,
-    __unm = function(a) 
-        a.x = -a.x
-        a.y = -a.y
-        a.z = -a.z
-        return a
+    __unm = function(a)
+		local solved = Vector(0,0,0)
+        solved.x = -a.x
+        solved.y = -a.y
+        solved.z = -a.z
+        return solved
     end,
     __add = function(a,b) 
         local solved = Vector(0,0,0)
@@ -163,6 +166,11 @@ function vecDef:splitxyz(round)
     end
 end
 
+--[[
+
+	Individual set/get functions for all three axis.
+
+]]--
 function vecDef:x(a) 
     if a ~= nil then self.x = a end
     return self.x 
@@ -211,18 +219,3 @@ end
 function v(x,y,z)
     return Vector(x,y,z)
 end
-
-function vecTabToSimpleTab(tab)
-    for k,v in pairs(tab) do
-        if getmetatable(v) == vec then
-            t[#t+1] = v.x
-            t[#t+1] = v.y
-        end
-    end
-end
-
-function packVectorNicely(...)
-    return vecTabToSimpleTab(arg)
-end
-
-print("libs.vector done.")
