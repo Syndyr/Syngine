@@ -20,6 +20,7 @@ UI.funcArray = {
     button = require("engine.classes.bases.ui.button"),
     check = require("engine.classes.bases.ui.check"),
     slider = require("engine.classes.bases.ui.slider"),
+    increment = require("engine.classes.bases.ui.increment"),
     drop = {},
     input = {},
     dialdisplay = {}
