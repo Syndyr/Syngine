@@ -1,7 +1,7 @@
 local vpBounds = love.window.getDimensions()
-e.ui:createFrame("dev_buttons", 0, e.console, v(0,302), v(250,vpBounds.y-390), false, false)
+local frame = e.ui:createFrame("dev_buttons", 0, e.console, v(0,302), v(250,vpBounds.y-390), false, false)
 
-objectData = {
+local objectData = {
         centered = false, 
         pos = v(0,0),
         size = v(140, 30),
@@ -23,7 +23,7 @@ end
 function objectData.data.doDrawn()
     return e.console
 end
-e.ui.getFrame("dev_buttons"):add("Check", objectData)
+frame:add("Check", objectData)
 
 objectData = {
         centered = false, 
@@ -47,7 +47,7 @@ end
 function objectData.data.doDrawn()
     return e.console
 end
-e.ui.getFrame("dev_buttons"):add("Check", objectData)
+frame:add("Check", objectData)
 
 objectData = {
         centered = false, 
@@ -71,7 +71,7 @@ end
 function objectData.data.doDrawn()
     return e.console
 end
-e.ui.getFrame("dev_buttons"):add("Check", objectData)
+frame:add("Check", objectData)
 
 objectData = {
         centered = false, 
@@ -95,7 +95,7 @@ end
 function objectData.data.doDrawn()
     return e.console
 end
-e.ui.getFrame("dev_buttons"):add("Check", objectData)
+frame:add("Check", objectData)
 
 
 objectData = {
@@ -117,7 +117,7 @@ end
 function objectData.data.setVar(var)
     e.mspeed = math.floor(var+0.5)
 end
-e.ui.getFrame("dev_buttons"):add("Slider", objectData)
+frame:add("Slider", objectData)
 
 
 

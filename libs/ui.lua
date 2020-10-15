@@ -25,6 +25,7 @@ function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     formatted = formatted + e.class.getBase("uiFrame", "engine")
     formatted.canvas = e.drawQue:addNew(name, "ui", 0, formatted.drawMeta, true, formatted.pos, formatted.size, formatted.upX, formatted.upY, {name})
     e.ui.frames[name] = formatted
+    return e.ui.frames[name]
 end
 
 function e.ui.getFrame(name)
