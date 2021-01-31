@@ -10,7 +10,6 @@ e.class = {
         end
     }
 }
-
 function e.class.mergWith(aTable, selfa)
     local newTable = e.table.copy(selfa)
     if newTable == nil or selfa == nil then 

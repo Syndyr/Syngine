@@ -99,7 +99,7 @@ function love.load()
                 
                 local st = l.timer.getTime()
                 
-                print("Importing library : ".."libs."..b.."....")
+                print("Importing library : libs."..b.."....")
                 
                 lfs = "libs."..b
                 
@@ -110,7 +110,7 @@ function love.load()
                 print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)\n----------\n")
             end
         end
-        --e.moonshine = require "libs.thirdParty.moonshine27122018"
+        
         print("Loading bases..\n----------\n")
         for k,v in pairs(e.manifest.bases) do
             print("Importing base: "..v[1].." from domain: "..v[2])
