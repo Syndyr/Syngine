@@ -17,6 +17,8 @@ function love.load()
         introFade = 255,
         noGameFlash = false,
         manifest = require "engine.manifest",
+        theta = 1,
+        thetaInc = 0.05,
         test = {
             flash = false,
             bottomBar = true,
@@ -137,6 +139,20 @@ function love.load()
     e.vpBounds = love.window.getDimensions()
     
     --Has to be set after the vector library is loaded or bad you'll have a bad day
+    e.hook:add("e_drawCallAux", "codeDoodle", function()
+        local vp = e.vp
+        local i, pi, theta, inc, rad = 0, math.pi, e.theta, math.pi/32, love.graphics.getHeight()/2
+        local cos, sin = math.cos, math.sin
+        local points = {}
+            
+        for i = 0, pi*2, inc do
+            points[#points+1] = (cos(i*theta)*rad)+vp.x
+            points[#points+1] = (sin(i*theta)*rad)+vp.y
+        end
+        
+        love.graphics.setColor(122,122,255,255)
+        --e.olLine(points)
+    end)
     
     e.hook:add("e_drawCallAux", "bearingTest", function()
         if not e.test.radiusTest then return false end
@@ -149,6 +165,9 @@ function love.load()
         local a = v(0,100)+zero
         local b = v(math.sin(pi*0.125)*mDist, math.cos(pi*0.125)*mDist)+zero
         local c = v(math.sin(bearing)*100, math.cos(bearing)*100)+zero
+            
+        
+            
         --[[
         local ca = v(math.sin(bearing-(pi*0.5))*25, math.cos(bearing-(pi*0.5))*25)+zero
         local bearingcaz = ca:bearing2D(zero)
@@ -159,7 +178,7 @@ function love.load()
         local ca, cb = zero:tangent2D(mPos, 12.5)
         
         e.setColorNormalised(1,1,1,1)
-        --love.graphics.print(ca:toString().."\n"..cb:toString(), v(20,200))
+        
             
         if bearing >= 0 and bearing <= pi*0.125 then
             love.graphics.setColor(0,255,0,255)
@@ -177,7 +196,9 @@ function love.load()
         love.graphics.setColor(255,0,255,255)
         e.olLine({zero.x, zero.y, c.x, c.y})
         e.olLine({ca.x, ca.y, cb.x, cb.y})
-         
+            
+        love.graphics.print(string.format("Sin: %+.4f\nCos: %+.4f\nTan: %+.4f\nBearing: %+.4f", math.sin(bearing), math.cos(bearing), math.atan(math.sin(bearing)/math.cos(bearing)), bearing), v(20,200)+e.vp)
+            --string.format("Sin: %+.4f\nCos: %+.4f", math.sin(bearing), math.cos(bearing))
         love.graphics.setColor(255,0,255,255)
     end)
     e.hook:add("e_drawCallAux", "fade", function()
@@ -255,7 +276,8 @@ function love.update(dt)
     if love.keyboard.isDown("d") then e.vp.x = e.vp.x-math.floor(e.mspeed*dt) end
     if love.keyboard.isDown("w") then e.vp.y = e.vp.y+math.floor(e.mspeed*dt) end
     if love.keyboard.isDown("a") then e.vp.x = e.vp.x+math.floor(e.mspeed*dt) end
-    
+    --print(love.timer.getTime( )%0.1 <= dt)
+    if love.timer.getTime( )%0.05 <= dt then e.theta = e.theta + e.thetaInc end
 end
 
 function love.focus(bool)
@@ -282,6 +304,12 @@ function love.keypressed( key, unicode )
         e.console = not e.console 
         e.consoleTyping = e.console
         e.consoleText = {}
+    end
+    if key == "up" then
+        e.theta = e.theta + 0.5
+    end
+    if key == "down" then
+        e.theta = e.theta - 0.5
     end
 end
 
