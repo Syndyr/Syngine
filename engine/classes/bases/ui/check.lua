@@ -17,14 +17,25 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
         end
     end
     if selfa.data.value == nil then selfa.data.value = function() return "No value" end end
+    
+    local theme = e.ui:getTheme()
+    local colours = {
+        
+        primary = selfa.colors.primary or e.ui:getThemeColour("primary"),
+        secondary = selfa.colors.secondary or e.ui:getThemeColour("secondary"),
+        terciary = selfa.colors.terciary or e.ui:getThemeColour("terciary"),
+        misc = selfa.colors.misc or e.ui:getThemeColour("misc")
+        
+    }
+    
     love.graphics.setFont(e.fonts.arial18)
-    love.graphics.setColor(selfa.colors.secondary)
+    love.graphics.setColor(colours.secondary)
     love.graphics.rectangle("fill", selfa.pos, selfa.size)
     
-    love.graphics.setColor(selfa.colors.primary)
+    love.graphics.setColor(colours.primary)
     love.graphics.rectangle("line", selfa.pos+v(2,2), selfa.size-v(4,4))
     
-    love.graphics.setColor(selfa.colors.terciary)
+    love.graphics.setColor(colours.terciary)
     local xoff = (e.fonts.arial18:getHeight()/2)
     local strin = selfa.data.value()
     if selfa.centered then

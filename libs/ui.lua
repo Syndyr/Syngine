@@ -1,9 +1,53 @@
 e.ui = {
     frames = {},
     buttonCatch = false,
+    typingElement = {},
+    themes = {
+        theme = "standard",
+        standard = {
+            
+            global = {
+                
+                primary = {255,255,255,128},
+                secondary = {64,64,64,28},
+                terciary = {64,64,64},
+                misc = {255,255,200}
+                
+            }
+            
+        }
+        
+    },
     debug = false
 }
+function e.ui:setTheme(theme)
+    if self.themes[theme] == nil then return false end
+    
+    self.themes.theme = theme
+    
+    return true
+end
 
+function e.ui:getTheme()
+    return self.themes.theme
+end
+function e.ui:getThemeColour(...)
+    
+    local args = {...}
+    local scope = args[1]
+    local context = args[2]
+    local iof = 0
+    if #args == 1 then 
+        scope = self.themes.theme
+        context = "global"
+        iof = 2
+    end
+    local index = args[3-iof]
+    return self.themes[scope][context][index]
+end
+function e.ui:testTheme(...)
+    print(table.concat(e.ui:getThemeColour(...), ", "))
+end
 function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     assert( type(name) == "string" and
             type(priority) == "number",

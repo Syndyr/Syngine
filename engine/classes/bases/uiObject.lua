@@ -5,14 +5,7 @@ UI.base = "e_base"
 UI.type = "value"
 UI.pos = v()
 UI.size = v(120,30)
-UI.colors = {
-    
-    primary = {255,255,255,128},
-    secondary = {64,64,64,28},
-    terciary = {64,64,64},
-    misc = {255,255,200}
-    
-}
+UI.colors = {}
 UI.frame = "No frame?"
 UI.data = {}
 UI.funcArray = {
