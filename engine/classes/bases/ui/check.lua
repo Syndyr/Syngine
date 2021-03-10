@@ -21,10 +21,10 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     local theme = e.ui:getTheme()
     local colours = {
         
-        primary = selfa.colors.primary or e.ui:getThemeColour("primary"),
-        secondary = selfa.colors.secondary or e.ui:getThemeColour("secondary"),
-        terciary = selfa.colors.terciary or e.ui:getThemeColour("terciary"),
-        misc = selfa.colors.misc or e.ui:getThemeColour("misc")
+        primary = selfa.colours.primary or e.ui:getThemeColour("primary"),
+        secondary = selfa.colours.secondary or e.ui:getThemeColour("secondary"),
+        terciary = selfa.colours.terciary or e.ui:getThemeColour("terciary"),
+        misc = selfa.colours.misc or e.ui:getThemeColour("misc")
         
     }
     
