@@ -248,6 +248,7 @@ function love.load()
         end
     end)
     ]]--
+
 end
 
 function love.resize(x,y)
@@ -261,9 +262,44 @@ function love.draw()
         love.graphics.setLineStyle("smooth")
         love.graphics.setLineJoin("none")
         lineOnce = true
+
+        
     end
+    
+    points = {
+        v(20, 10),
+        love.mouse.getPosition(),
+        v(60, 80),
+    }
+
+    vecs = {
+        points[1]:getVector(points[2]),
+        points[1]:getVector(points[3])
+    }
+    print(Tserial.pack(vecs,"",true))
+    dotProduct = vecs[1]:dotProduct(vecs[2])
+    print(dotProduct)
+        
+    angleBetweenVectors = vecs[1]:angleBetween(vecs[2])
+    print(angleBetweenVectors)
+        
+    projectedDot = vecs[1]:project(vecs[2])
+    print(projectedDot)
+    
     love.graphics.setFont(e.fonts.arial18)
     e.hook:run("draw")
+    
+    love.graphics.setColor(128,128,255)
+    e.olLine((points[1].x+vecs[2].x*projectedDot)*1.1, (points[1].y+vecs[2].y*projectedDot)*1.1, points[1].x, points[1].y )
+    
+    love.graphics.setColor(255,0,0)
+    e.olLine(points[1].x, points[1].y, points[1].x+vecs[1].x, points[1].y+vecs[1].y )
+    
+    love.graphics.setColor(0,255,0)
+    e.olLine(points[1].x, points[1].y, points[1].x+vecs[2].x, points[1].y+vecs[2].y )
+    
+    love.graphics.setColor(0,0,255)
+    e.olLine(points[1].x+vecs[2].x*projectedDot, points[1].y+vecs[2].y*projectedDot, points[1].x+vecs[1].x, points[1].y+vecs[1].y )
 end
 
 function love.update(dt)
