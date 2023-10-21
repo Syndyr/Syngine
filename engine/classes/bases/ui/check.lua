@@ -50,7 +50,7 @@ function uiElement.draw(dt, selfa, buttonThink, k, self)
     love.graphics.setColor(col)
     love.graphics.print(strin, selfa.pos+v(xoff, (selfa.size.y/2)-(e.fonts.arial18:getHeight()/2)))
     
-    love.graphics.setColor(selfa.colors.primary)
+    love.graphics.setColor(colours.primary)
     love.graphics.rectangle("fill", v(selfa.pos.x+selfa.size.x-22, selfa.pos.y+((selfa.size.y/2)-7.5)), v(15,15))
     
     local col = {100,150,150}
