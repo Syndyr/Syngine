@@ -186,6 +186,40 @@ function vecDef:z(a)
     return self.z 
 end
 
+function vecDef:getVector(b)
+
+    if b == nil then error("Vectors require two components") end
+    
+    return b - self
+
+end
+
+function vecDef:dotProduct(b)
+    
+    --local dist = v():dist(self)
+    return ((self.x * b.x) + (self.y * b.y) + (self.z * b.z))--/dist
+    
+end
+
+function vecDef:angleBetween(b)
+   
+    local dotProduct = self:dotProduct(b)
+    local selfMagnitude = self:dist(v())
+    local bMagnitude = b:dist(v())
+    local stepa = (dotProduct/selfMagnitude)/bMagnitude
+    
+    return math.acos(stepa)
+    
+end
+
+function vecDef:project(b)
+    
+    local dotProduct = self:dotProduct(b)
+    local theta = self:angleBetween(b)
+    local h = b:dist(v())
+    return self:dist(v()) / (h*math.cos(theta))
+    
+end
 --[[
 
     A creation function
