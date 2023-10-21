@@ -20,6 +20,8 @@ return {
             "ui",
             "fuz",
             "misc"
+        },{
+            "isoTile"
         }
     },
     bases = {
@@ -28,7 +30,9 @@ return {
         {"timer", "engine"},
         {"drawable", "engine"},
         {"uiFrame", "engine"},
-        {"testPlayer", "engine"}
+        {"testPlayer", "engine"},
+        {"isoTileWorld", "engine"},
+        {"isoTile", }
     },
     assets = {
         "tiles/noTex",

@@ -4,7 +4,7 @@ function love.load()
     
     e = {
         print = {}, 
-        _version = "0.1.1-11.2",
+        _version = "0.1.1-11.4",
         console = false, 
         consoleTyping = false, 
         consoleText = {}, 
@@ -22,7 +22,7 @@ function love.load()
         test = {
             flash = false,
             bottomBar = true,
-            radiusTest = true
+            radiusTest = false
         }
     }
     e.fonts.arial18 = love.graphics.newFont("assets/fonts/arial.ttf", 18)
@@ -201,10 +201,12 @@ function love.load()
             --string.format("Sin: %+.4f\nCos: %+.4f", math.sin(bearing), math.cos(bearing))
         love.graphics.setColor(255,0,255,255)
     end)
+    
     e.hook:add("e_drawCallAux", "fade", function()
         love.graphics.setColor({0,0,0,e.introFade})
         love.graphics.rectangle("fill", v(), e.vpBounds)
     end)
+    
     e.hook:add("update", "e_timer", function() e.timer:run() end)
     e.hook:add("update", "e_noGameVPMovement", function() 
         --[[
@@ -213,11 +215,11 @@ function love.load()
         e.vpLerp = e.vpLerp + 1*e.dt
         ]]--
     end)
-    e.timer:new("e_fadeStart", 1, true, true, function()
+    e.timer:new("e_fadeStart", 0.2, true, true, function()
         e.hook:add("update", "e_introFade", function() 
 
             if e.introFade >= 0 then
-                e.introFade = e.introFade - (255*(e.dt/5))
+                e.introFade = e.introFade - (255*(e.dt))
             else
                 e.hook:remove("update", "e_introFade")
             end
@@ -266,6 +268,10 @@ function love.draw()
         
     end
     
+    love.graphics.setFont(e.fonts.arial18)
+    e.hook:run("draw")
+    
+    --[[
     points = {
         v(20, 10),
         love.mouse.getPosition(),
@@ -286,9 +292,6 @@ function love.draw()
     projectedDot = vecs[1]:project(vecs[2])
     print(projectedDot)
     
-    love.graphics.setFont(e.fonts.arial18)
-    e.hook:run("draw")
-    
     love.graphics.setColor(128,128,255)
     e.olLine((points[1].x+vecs[2].x*projectedDot)*1.1, (points[1].y+vecs[2].y*projectedDot)*1.1, points[1].x, points[1].y )
     
@@ -300,6 +303,7 @@ function love.draw()
     
     love.graphics.setColor(0,0,255)
     e.olLine(points[1].x+vecs[2].x*projectedDot, points[1].y+vecs[2].y*projectedDot, points[1].x+vecs[1].x, points[1].y+vecs[1].y )
+    ]]--
 end
 
 function love.update(dt)
