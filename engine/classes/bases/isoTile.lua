@@ -1,14 +1,13 @@
 local t = {}
 
 t.cid = "iso_tile"
-t.size = v(128,64)
+t.texture = "unset"
 t.data = {
-    points = {
-        v(t.size * v(0.5, 0)),
-        v(t.size * v(1, 0.5)),
-        v(t.size * v(0.5, 1)),
-        v(t.size * v(0, 0.5))
-    }
 }
 
+function t:draw(screenPos)
+    
+    
+    
+end
 return t

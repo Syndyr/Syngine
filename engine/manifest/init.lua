@@ -31,8 +31,7 @@ return {
         {"drawable", "engine"},
         {"uiFrame", "engine"},
         {"testPlayer", "engine"},
-        {"isoTileWorld", "engine"},
-        {"isoTile", }
+        {"isoTile", "engine"}
     },
     assets = {
         "tiles/noTex",
@@ -44,6 +43,7 @@ return {
     },
     drawables = {
         "consoleUI",
-        "noGameScreen"
+        "noGameScreen",
+        "isoTileWorld"
     }
 }
