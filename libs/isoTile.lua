@@ -109,28 +109,33 @@ function t:testingDraw()
     local VPOffset = e.vp
     local tiles = self.testTiles
     local tile = self.tileMesh
+
+    local mpos = love.mouse.getPosition()
+            --:inBounds2D(b, p)
+    local mposInWorldSpace = self:getWorldCoordinate(VPOffset-mpos)
+            
+    local mx, my = math.floor(mposInWorldSpace.x + 1.5)*-1,math.floor(mposInWorldSpace.y + 0.5)*-1
+    
+    love.graphics.setColor(255,0,0,255)
+    --e.olgPrint(k..","..n, pos.x+VPOffset.x, pos.y+VPOffset.y)
+    e.olgPrint(mx..","..my, mpos.x, mpos.y-20)
+    
+    
     for k,v in pairs(tiles) do
         
         for n,b in pairs(v) do
             
             love.graphics.setColor(255,255,255,20)
             
-            local mpos = love.mouse.getPosition()
-            --:inBounds2D(b, p)
-            local mposInWorldSpace = self:getWorldCoordinate(VPOffset-mpos)
-            
-            local mx, my = math.floor(mposInWorldSpace.x + 1.5)*-1,math.floor(mposInWorldSpace.y + 0.5)*-1
             
             if mx == k and my == n then love.graphics.setColor(255,0,0,20) end 
             
-            --e.olDraw(tile, mposInWorldSpace.x, mposInWorldSpace.y)
             
             local pos = b * self.size
             e.olDraw(tile, pos.x+VPOffset.x, pos.y+VPOffset.y)
             
-            love.graphics.setColor(255,0,0,255)
-            e.olgPrint(k..","..n, pos.x+VPOffset.x, pos.y+VPOffset.y)
-            e.olgPrint(mx..","..my, mpos.x, mpos.y-10)
+            
+            
             
         end
         
