@@ -5,6 +5,17 @@
     Lua, specifically for use within graphics and/or game engines.
     This is a purely Lua implimentation.
 
+    This isn't a thirdparty library, but it needs to exist in global space, 
+    and the third party library importer doesn't require the library to be
+    containerised.
+
+    Author: Connor Day / Syndyr
+    Version: 1.2 
+
+        Added trig/vector math functions that are different from the 
+        main repo of Lua Vector https://github.com/Syndyr/LuaVector 
+        Might update that repo in the future.
+
 ]]--
 local vecDef = {}
 				--I've had to break it up like this since some Lua versions 

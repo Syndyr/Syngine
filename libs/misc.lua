@@ -1,7 +1,11 @@
-e.misc = {
+local misc = {
+    __title = "Misc library",
+    __description = [[Provides uncatagarised helper functions]],
+    __author = "Connor Day",
+    __version = 1,
 }
 
-function e.misc.saveEngineState()
+function misc.saveEngineState()
     print("Serialising the engine state..")
     local engine = Tserial.pack(e, true, true)
     local fileName = love.math.random(100000, 999999)
@@ -10,3 +14,4 @@ function e.misc.saveEngineState()
     love.system.setClipboardText(rfn)
     print("Engine snapshot saved.\nFilepath to log file sent to clipboard")
 end
+return misc

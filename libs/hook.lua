@@ -1,4 +1,8 @@
-e.hook = {
+local hook = {
+    __title = "Hook library",
+    __description = [[A basic event system in place of using Love's event system]],
+    __author = "Connor Day",
+    __version = 1,
     hooks = {
         update = {},
         draw = {},
@@ -7,9 +11,9 @@ e.hook = {
     }
 }
 
-function e.hook:getHooks()
+function hook:getHooks()
     local str = {}
-    for k,v in pairs(e.hook.hooks) do
+    for k,v in pairs(self.hooks) do
         str[#str+1] = "Catagory: "..k.."\n"
         for n,b in pairs(v) do
             str[#str+1] = "Hook: "..n.."\n"
@@ -18,7 +22,7 @@ function e.hook:getHooks()
     return str
 end
 
-function e.hook:run(name, dt)
+function hook:run(name, dt)
     if dt == nil then dt = e.dt end
     if self.hooks[name] == nil then 
         self:new(name)
@@ -30,7 +34,7 @@ function e.hook:run(name, dt)
     end
 end
 
-function e.hook:new(name)
+function hook:new(name)
     if self.hooks[name] ~= nil then
         self.hooks[name] = {}
     else
@@ -38,14 +42,14 @@ function e.hook:new(name)
     end
 end
 
-function e.hook:add(hook, name, func)
+function hook:add(hook, name, func)
     if self.hooks[hook] == nil then
         self:new(hook)
     end
     self.hooks[hook][name] = {n = name, v = func}
 end
 
-function e.hook:remove(domain, name)
+function hook:remove(domain, name)
     if e.hook.hooks[domain] ~= nil then
         if e.hook.hooks[domain][name] ~= nil then
             e.hook.hooks[domain][name] = nil
@@ -56,3 +60,5 @@ function e.hook:remove(domain, name)
         print("No such domain as: "..domain)
     end
 end
+
+return hook

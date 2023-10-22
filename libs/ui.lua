@@ -1,4 +1,8 @@
-e.ui = {
+local ui = {
+    __title = "User interface library",
+    __description = [[Provides various functions and structures that allow for the creation, control and batched rendering of UI elements.]],
+    __author = "Connor Day",
+    __version = 2,
     frames = {},
     buttonCatch = false,
     typingElement = {},
@@ -20,7 +24,7 @@ e.ui = {
     },
     debug = false
 }
-function e.ui:setTheme(theme)
+function ui:setTheme(theme)
     if self.themes[theme] == nil then return false end
     
     self.themes.theme = theme
@@ -28,10 +32,10 @@ function e.ui:setTheme(theme)
     return true
 end
 
-function e.ui:getTheme()
+function ui:getTheme()
     return self.themes.theme
 end
-function e.ui:getThemeColour(...)
+function ui:getThemeColour(...)
     
     local args = {...}
     local scope = args[1]
@@ -45,10 +49,10 @@ function e.ui:getThemeColour(...)
     local index = args[3-iof]
     return self.themes[scope][context][index]
 end
-function e.ui:testTheme(...)
-    print(table.concat(e.ui:getThemeColour(...), ", "))
+function ui:testTheme(...)
+    print(table.concat(self:getThemeColour(...), ", "))
 end
-function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
+function ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     assert( type(name) == "string" and
             type(priority) == "number",
             "Type missmatch.")
@@ -66,7 +70,7 @@ function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     if upX == nil then upX = false end
     if upY == nil then upY = false end
     local formatted =  {name = name, catagory = "ui", draw = drawMeta, doDraw = doDraw, pos = pos, size = size, upX = upX, upY = upY}
-    formatted = formatted + e.class.getBase("uiFrame", "engine")
+    formatted = formatted + e.class:getBase("uiFrame", "engine")
     formatted.canvas = e.drawQue:addNew(
         name, 
         "ui", 
@@ -81,13 +85,15 @@ function e.ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
             name
         }
     )
-    e.ui.frames[name] = formatted
-    return e.ui.frames[name]
+    self.frames[name] = formatted
+    return self.frames[name]
 end
 
-function e.ui.getFrame(name)
-    return e.ui.frames[name]
+function ui:getFrame(name)
+    return self.frames[name]
 end
+
+return ui
 
 --[[
 

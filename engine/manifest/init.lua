@@ -1,10 +1,13 @@
 return {
     libraries = {
-        {
-            "math",
+        thirdParty = {
+            "serial",
             "vector",
-            "table",
-            "thirdParty.serial"
+            "fuz",
+            "loveVec"
+        },{
+            "math",
+            "table"
         },{
             "string",
             "hook",
@@ -12,13 +15,11 @@ return {
             "timer",
             "map"
         },{
-            "loveVec",
-            "assets",
+            "asset",
             "graphics",
             "drawQue",
             "keys",
             "ui",
-            "fuz",
             "misc"
         },{
             "isoTile"

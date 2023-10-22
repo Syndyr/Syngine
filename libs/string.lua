@@ -1,7 +1,12 @@
 print("Defining string.explode function.")
-e.string = {}
+local string = {
+    __title = "String library",
+    __description = [[Provides helper functions for the string datatype]],
+    __author = "Connor Day",
+    __version = 1,
+}
 
-function e.string.explode(stack, needle)
+function string.explode(stack, needle)
 	if needle == nil then
 		needle = "%S+"
 	end
@@ -14,7 +19,7 @@ function e.string.explode(stack, needle)
 	return splitReturn
 end
 
-function e.string.toSeed(s)
+function string.toSeed(s)
     local trans = {
         ["0"] = 100,
         ["1"] = 1,
@@ -67,3 +72,4 @@ function e.string.toSeed(s)
     return tonumber(tes)
 end
 print("libs.string done.")
+return string

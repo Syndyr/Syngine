@@ -96,27 +96,56 @@ function love.load()
     
     function e.loadItemsFromManifest()
         local startTime = love.timer.getTime()*1000
-        for k,v in pairs(e.manifest.libraries) do
-            for n,b in pairs(v) do
-                
+        for k,v in pairs(e.manifest.libraries.thirdParty) do
+
                 local st = l.timer.getTime()
-                
-                print("Importing library : libs."..b.."....")
-                
-                lfs = "libs."..b
-                
-                require("libs."..b)
-                
+
+                print("Importing library : libs.thirdParty."..v.."....")
+
+                lfs = "libs."..v
+
+                require("libs.thirdParty."..v)
+
                 lfs = "love.main"
+
+                print("Done ("..((l.timer.getTime()-st)*1000).."ms)\n----------\n")
+            
+        end
+        for k,v in pairs(e.manifest.libraries) do
+            
+            if k ~= "thirdParty" then
+                for n,b in pairs(v) do
+
+                    local st = l.timer.getTime()
+
+                    print("Importing library : libs."..b.."....")
+
+                    lfs = "libs."..b
+                    
+                    local importedLibrary = require("libs."..b)
                 
-                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)\n----------\n")
+                    print(
+                        "---------------------\n",
+                        "Title: \t\t", importedLibrary.__title,
+                        "Description: ", importedLibrary.__description,
+                        "Author: ", importedLibrary.__author,
+                        "Version: ", importedLibrary.__version,
+                        "\n---------------------"
+                    )
+                    
+                    e[b] = importedLibrary
+
+                    lfs = "love.main"
+
+                    print("Done ("..((l.timer.getTime()-st)*1000).."ms)\n----------\n")
+                end
             end
         end
         
         print("Loading bases..\n----------\n")
         for k,v in pairs(e.manifest.bases) do
             print("Importing base: "..v[1].." from domain: "..v[2])
-            e.class.getBase(v[1], v[2])
+            e.class:getBase(v[1], v[2])
         end
         print("\n----------\nBases loaded.\nLoading assets..\n----------\n")
         for k,v in pairs(e.manifest.assets) do

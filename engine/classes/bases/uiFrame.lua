@@ -24,7 +24,7 @@ function FRAME:setDraw(bool)
 end
 
 function FRAME:add(type, objectData)
-    local fData = e.class.getBase("uiObject", "engine")+objectData
+    local fData = e.class:getBase("uiObject", "engine")+objectData
     if objectData.pos ~= nil then
         fData.pos = objectData.pos
     end

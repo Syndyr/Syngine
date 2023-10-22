@@ -1,6 +1,11 @@
-e.graphics = {}
+local graphics = {
+    __title = "Graphics library",
+    __description = [[Provides custom graphics functions]],
+    __author = "Connor Day",
+    __version = 1,
+}
 
-function e.graphics.arch(type, triangulate, pos, od, id, archStart, archEnd, segments, idIsPercentage)
+function graphics.arch(type, triangulate, pos, od, id, archStart, archEnd, segments, idIsPercentage)
     
     assert(pos ~= nil, "No position for the Arch!")
     --assert(getmetatable(pos) == getmetatable(v()), "Position isn't a vector!")
@@ -52,3 +57,5 @@ function e.graphics.arch(type, triangulate, pos, od, id, archStart, archEnd, seg
         love.graphics.polygon(type, points)
     end
 end
+
+return graphics

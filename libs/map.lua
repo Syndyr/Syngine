@@ -1,4 +1,8 @@
 local t = {
+    __title = "Map library",
+    __description = [[Originally meant for generating square tile worlds, currently abandoned while isometric worlds are worked on]],
+    __author = "Connor Day",
+    __version = 1,
     h = { --Header, where map details will go
         --seed = string.toSeed("Cake is a lie"),
         name = "Wasteland",
@@ -73,3 +77,5 @@ function g.load(name)
     ]]--
 end
 print("libs.map done.")
+
+return t
