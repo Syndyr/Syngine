@@ -124,19 +124,12 @@ function love.load()
                     
                     local importedLibrary = require("libs."..b)
                 
-                    print(
-                        "---------------------\n",
-                        "Title: \t\t", importedLibrary.__title,
-                        "Description: ", importedLibrary.__description,
-                        "Author: ", importedLibrary.__author,
-                        "Version: ", importedLibrary.__version,
-                        "\n---------------------"
-                    )
+                   
                     
                     e[b] = importedLibrary
 
                     lfs = "love.main"
-
+                    print( "---------------------\nTitle: \t\t"..importedLibrary.__title.."\nDescription: \t"..importedLibrary.__description.."\nAuthor: \t\t"..importedLibrary.__author.."\nVersion: \t"..importedLibrary.__version.."\n---------------------")
                     print("Done ("..((l.timer.getTime()-st)*1000).."ms)\n----------\n")
                 end
             end
