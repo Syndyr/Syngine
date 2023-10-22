@@ -1,7 +1,7 @@
 l = setmetatable({}, {__index = love})
 function love.conf(t)
     t.identity = "Syngyn"                   -- The name of the save directory (string)
-    t.version = "11.2"                -- The LÖVE version this game was made for (string)
+    t.version = "11.4"                -- The LÖVE version this game was made for (string)
     t.console = true                  -- Attach a console (boolean, Windows only)
 
     t.window.title = "Syngine"        -- The window title (string)
