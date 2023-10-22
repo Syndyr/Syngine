@@ -4,34 +4,61 @@ function love.load()
     
     e = {
         print = {}, 
-        _version = "0.1.0",
+        _version = "0.1.1-11.4",
         console = false, 
         consoleTyping = false, 
         consoleText = {}, 
         consoleLine = 0, 
         debug = true,
         dt = 0,
-        font = love.graphics.newFont(12),
-        manifest = require "engine.manifest"
+        fonts = {},
+        doDraw = true,
+        mspeed = 500,
+        introFade = 255,
+        noGameFlash = false,
+        manifest = require "engine.manifest",
+        theta = 1,
+        thetaInc = 0.05,
+        test = {
+            flash = false,
+            bottomBar = true,
+            radiusTest = false
+        }
     }
-    
+    e.fonts.arial18 = love.graphics.newFont("assets/fonts/arial.ttf", 18)
     --This is the engine table, all functions should go here.
     --Also functions as a lookup table for the game table
     --Allowing for me to be lazy.
-    
+        
     e.oldprint = print
     --Transport print to a different function as we want to hook into it
     
     function print(s)
         --We're making our own print function so it hooks into the console
+        
         if s == nil then s = "nil" end
         if type(s) ~= "string" then s = tostring(s) end
+        
+        if s:find("[^\r\n]+") ~= nil then
+            
+            for k in s:gmatch("[^\r\n]+") do    
+                --e.oldprint("\tTest\t"..k)
+                local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..k
+                e.oldprint(strn)
+                --Do a classic print
+
+                e.print[#e.print+1] = strn
+            end
+            
+            return false
+        end
+        
         --Some simple input sanitisation 
-        local strn = '['..os.date("%H:%M:%S")..']['..lfs..'] : '..s
+        local strn = '['..os.date("%H:%M:%S")..' '..lfs..'] : '..s
         e.oldprint(strn)
         --Do a classic print
         
-        e.print[#e.print+1] = {strn}
+        e.print[#e.print+1] = strn
         --Add the print to the print array
     end
     lfs = "love.main"
@@ -43,191 +70,262 @@ function love.load()
         <folderName>.<filename> for anything in child folders 
     ]]--
     
+    e.setColorNormalised = love.graphics.setColor
+    function love.graphics.setColor(r,g,b,a)
+        local arg = {r or 255,g or 255,b or 255,a or 255}
+        if(type(arg[1]) == "string") then return end
+        local r,g,b,a = 0,0,0,0
+        if type(arg[1]) == "table" then
+            --r,g,b,a = math.min(arg[1][1]/255, 1) or 0, math.min(arg[1][2]/255, 1) or 0, math.min(arg[1][3]/255, 1) or 0, math.min(arg[1][4]/255, 1) or 0
+            r = math.min(arg[1][1]/255, 1) or 0
+            g = math.min(arg[1][2]/255, 1) or 0
+            b = math.min(arg[1][3]/255, 1) or 0
+            a = math.min((arg[1][4] or 255)/255, 1) or 0
+        else
+            r,g,b,a = math.min(arg[1]/255, 1) or 0, math.min(arg[2]/255, 1) or 0, math.min(arg[3]/255, 1) or 0, math.min(arg[4]/255, 1) or 0
+        end
+        
+        e.setColorNormalised(r,g,b,a)
+        
+    end
     
-    
-    g = setmetatable({ 
-        mspeed = 500
+    g = setmetatable({
     }, {__index = e})
     --This is the game table, any game specific data goes here.
     --Only data, no functions.
     
     function e.loadItemsFromManifest()
         local startTime = love.timer.getTime()*1000
-        for k,v in pairs(e.manifest.libraries) do
-            for n,b in pairs(v) do
-                
+        for k,v in pairs(e.manifest.libraries.thirdParty) do
+
                 local st = l.timer.getTime()
-                
-                print("Impoting library : ".."libs."..b.."....")
-                
-                lfs = "libs."..b
-                
-                require("libs."..b)
-                
+
+                print("Importing library : libs.thirdParty."..v.."....")
+
+                lfs = "libs."..v
+
+                require("libs.thirdParty."..v)
+
                 lfs = "love.main"
+
+                print("Done ("..((l.timer.getTime()-st)*1000).."ms)\n----------\n")
+            
+        end
+        for k,v in pairs(e.manifest.libraries) do
+            
+            if k ~= "thirdParty" then
+                for n,b in pairs(v) do
+
+                    local st = l.timer.getTime()
+
+                    print("Importing library : libs."..b.."....")
+
+                    lfs = "libs."..b
+                    
+                    local importedLibrary = require("libs."..b)
                 
-                print("Done ("..e.math.round(((l.timer.getTime()-st)*1000), 4).."ms)")
-                print("----------")
-                print("")
+                   
+                    
+                    e[b] = importedLibrary
+
+                    lfs = "love.main"
+                    print( "---------------------\nTitle: \t\t"..importedLibrary.__title.."\nDescription: \t"..importedLibrary.__description.."\nAuthor: \t\t"..importedLibrary.__author.."\nVersion: \t"..importedLibrary.__version.."\n---------------------")
+                    print("Done ("..((l.timer.getTime()-st)*1000).."ms)\n----------\n")
+                end
             end
         end
-        print("Loading bases..")
-        print("")
-        print("----------")
-        print("")
+        
+        print("Loading bases..\n----------\n")
         for k,v in pairs(e.manifest.bases) do
             print("Importing base: "..v[1].." from domain: "..v[2])
-            e.class.getBase(v[1], v[2])
+            e.class:getBase(v[1], v[2])
         end
-        print("")
-        print("----------")
-        print("")
-        print("Bases loaded.")
-        print("Loading assets..")
-        print("")
-        print("----------")
-        print("")
+        print("\n----------\nBases loaded.\nLoading assets..\n----------\n")
         for k,v in pairs(e.manifest.assets) do
             print("Getting asset: "..v)
             e.asset:load(v)
         end
+        print("")
+        print("----------")
+        print("")
+        print("\n----------\nAssets loaded.\nLoading drawables..\n----------\n")
+        for k,v in pairs(e.manifest.drawables) do
+            print("Getting drawable: "..v)
+            require("assets.drawables."..v)
+        end
         print("Fully loaded in "..(love.timer.getTime()*1000)-startTime.."ms")
-        e.oldprint(Tserial.pack(e, true, true))
     end
-    
     e.loadItemsFromManifest()
-    
-    g.vp = Vector(0,0)
-    g.vpLerp = 0
+    e.vp = Vector(0,0)
+    e.vpLerp = 0
     e.vpBounds = love.window.getDimensions()
     
     --Has to be set after the vector library is loaded or bad you'll have a bad day
-    
-    function e.drawque()
-        for k,v in pairs(e.draw.drawque) do
-            if type(v) ~= "function" and e.drawqueIndexBlacklist[k] == nil then
-                
-                print("Attempted to draw a non function object via drawquee")
-                print(k..[["]]..type(v)..[["]])
-                print("Item added to the Index Blacklist.")
-                e.drawqueIndexBlacklist[k] = true
-            else
-                if e.drawqueIndexBlacklist[k] == nil then
-                    
-                    v(dt)
-                end
-            end
+    e.hook:add("e_drawCallAux", "codeDoodle", function()
+        local vp = e.vp
+        local i, pi, theta, inc, rad = 0, math.pi, e.theta, math.pi/32, love.graphics.getHeight()/2
+        local cos, sin = math.cos, math.sin
+        local points = {}
+            
+        for i = 0, pi*2, inc do
+            points[#points+1] = (cos(i*theta)*rad)+vp.x
+            points[#points+1] = (sin(i*theta)*rad)+vp.y
         end
-    end
-    --Simple draw que function, allows for dynamically adding items to a draw que
-    e.hook:add("draw", "e_drawque", e.drawque)
-    e.hook:add("update", "e_timer", function() e.timer:run() end)
-    e.hook:add("update", "e_noGameVPMovement", function() 
-        g.vp.x = math.floor(math.cos(g.vpLerp)*1000)
-        g.vp.y = math.floor(math.sin(g.vpLerp)*1000)
-        g.vpLerp = g.vpLerp + (3.14*(e.dt/10))
+        
+        love.graphics.setColor(122,122,255,255)
+        --e.olLine(points)
     end)
     
-    e.draw = {drawque = setmetatable({}, {__call = e.drawque})}
-    --Black magic metatable voodoo
-    
-    e.drawqueIndexBlacklist = {}
-    
-    e.draw.drawque["e_console"] = function(dt)
-        if e.console then
+    e.hook:add("e_drawCallAux", "bearingTest", function()
+        if not e.test.radiusTest then return false end
+        local screenCenter = e.vpBounds/2
+        local mPos = love.mouse.getPosition()
+        local pi = math.pi
+        
+        local zero = v(200,200)+e.vp
+        local bearing, mDist = zero:bearing2D(mPos)
+        local a = v(0,100)+zero
+        local b = v(math.sin(pi*0.125)*mDist, math.cos(pi*0.125)*mDist)+zero
+        local c = v(math.sin(bearing)*100, math.cos(bearing)*100)+zero
             
-            local I = 0
-            local strn = ""
-            for I = 0, 10, 1 do
-                
-                if e.print[#e.print-(I+e.consoleLine)] == nil then break end
-                strn = strn..e.print[#e.print-(I+e.consoleLine)][1].."\n"
-                
-            end
+        
             
-            local yOff = e.font:getHeight(strn)*10
-            local context = "/>\t("..(table.concat(e.consoleText) or "Lua")..")"
+        --[[
+        local ca = v(math.sin(bearing-(pi*0.5))*25, math.cos(bearing-(pi*0.5))*25)+zero
+        local bearingcaz = ca:bearing2D(zero)
             
-            love.graphics.setColor({64,64,64,64})
-            love.graphics.rectangle("fill", v(0,0), v(99999, yOff+35))
-            love.graphics.rectangle("fill", v(0,yOff+40), v(99999, e.font:getHeight(strn)+5 ))
+        local cb = v(math.sin(bearingcaz)*25, math.cos(bearingcaz)*25)+zero
+        ]]--
             
-            love.graphics.setColor({64,64,64})
-            love.graphics.print(context, v(10,yOff+42), 0, v(1,1))
-            love.graphics.setColor({255,255,200})
-            love.graphics.print(context, v(11,yOff+43), 0, v(1,1))
+        local ca, cb = zero:tangent2D(mPos, 12.5)
+        
+        e.setColorNormalised(1,1,1,1)
+        
             
-            love.graphics.setColor({255,255,255,128})
-            e.olLine(
-                {
-                    0, yOff+30, 
-                    g.vpBounds.x, yOff+30
-                }
-            )
-            
-            love.graphics.setColor({64,64,64})
-            love.graphics.print(strn, v(10,10), 0, v(1,1))
-            love.graphics.setColor({255,255,200})
-            love.graphics.print(strn, v(11,11), 0, v(1,1))
+        if bearing >= 0 and bearing <= pi*0.125 then
+            love.graphics.setColor(0,255,0,255)
+        else
+            love.graphics.setColor(255,0,0,255)
         end
-    end
-    --Console drawing
-    e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
-    e.draw.drawque["e_background_debug"] = function(dt)
-        if not e.debug then return end
-        love.graphics.setColor(255,255,255)
-        local xOff, yOff = (g.vp%64):splitxyz()
-        local xLim, yLim = (e.vpBounds/64):splitxyz(true)
-        local x,y = -1, -1
-        local drawMe = e.asset:get("image", "noTex")
-        for x = -1, math.floor(xLim+0.5), 1 do
-            local rX, rY = (x*64)+xOff, (y*64)+yOff
-            for y = -1, math.floor(yLim+0.5), 1 do
-                rY = (y*64)+yOff
-                e.olDraw(drawMe.image, rX, rY)
+        e.olLine({zero.x, zero.y, a.x, zero.y + mDist})
+            
+        e.olLine({zero.x, zero.y, b.x, b.y})
+            
+        e.graphics.arch("fill", true, v(200,200)+e.vp, mDist-50, mDist-60, 0, pi*0.125, 16, false)
+        if bearing <= 0 then bearing = (bearing)+pi*2 end
+        e.graphics.arch("line", true, v(200,200)+e.vp, mDist, mDist-10, 0, bearing, "dynamic", false)
+           
+        love.graphics.setColor(255,0,255,255)
+        e.olLine({zero.x, zero.y, c.x, c.y})
+        e.olLine({ca.x, ca.y, cb.x, cb.y})
+            
+        love.graphics.print(string.format("Sin: %+.4f\nCos: %+.4f\nTan: %+.4f\nBearing: %+.4f", math.sin(bearing), math.cos(bearing), math.atan(math.sin(bearing)/math.cos(bearing)), bearing), v(20,200)+e.vp)
+            --string.format("Sin: %+.4f\nCos: %+.4f", math.sin(bearing), math.cos(bearing))
+        love.graphics.setColor(255,0,255,255)
+    end)
+    
+    e.hook:add("e_drawCallAux", "fade", function()
+        love.graphics.setColor({0,0,0,e.introFade})
+        love.graphics.rectangle("fill", v(), e.vpBounds)
+    end)
+    
+    e.hook:add("update", "e_timer", function() e.timer:run() end)
+    e.hook:add("update", "e_noGameVPMovement", function() 
+        --[[
+        e.vp.x = (math.sin(e.vpLerp)*100) - (e.vpBounds.x/2)
+        e.vp.y = (math.cos(e.vpLerp)*100) - (e.vpBounds.y/2)
+        e.vpLerp = e.vpLerp + 1*e.dt
+        ]]--
+    end)
+    e.timer:new("e_fadeStart", 0.2, true, true, function()
+        e.hook:add("update", "e_introFade", function() 
+
+            if e.introFade >= 0 then
+                e.introFade = e.introFade - (255*(e.dt))
+            else
+                e.hook:remove("update", "e_introFade")
             end
-        end
-        love.graphics.setColor({64,64,64,128})
-        love.graphics.rectangle("fill", v(0, e.vpBounds.y-e.font:getHeight(strn)-10), v(e.vpBounds.x, e.font:getHeight(strn)+10))
-        
-        love.graphics.setColor({255,255,255,128})
-        e.olLine(
-            {
-                0, e.vpBounds.y-e.font:getHeight(strn)-6, 
-                g.vpBounds.x, e.vpBounds.y-e.font:getHeight(strn)-6
-            }
-        )
-        
-        local context = g.vp:toString()
-        love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(10,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(11,e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        
-        
-        local context = "LOVE version: "..love._version.."\t|\t Syngyn version: "..e._version.."\t|\tFPS: "..love.timer.getFPS().." ("..math.floor(1/love.timer.getAverageDelta())..")"
-        love.graphics.setColor({64,64,64})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-5, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        love.graphics.setColor({255,255,200})
-        love.graphics.print(context, v(e.vpBounds.x-e.font:getWidth(context)-4, e.vpBounds.y-e.font:getHeight(strn)-2), 0, v(1,1))
-        love.graphics.setColor({255,255,255,255})
-        
-        e.olDraw(e.asset:get("image", "engine_splash").image, e.asset:get("image", "engine_splash").tiles.engine_combined, (e.vpBounds.x/2)-512, (e.vpBounds.y/2)-134)
+
+        end)
+    end)
+    e.drawQue:init()
+    e.timer:new("e_noGameFlash", 1, true, false, function() e.noGameFlash = not e.noGameFlash end)
+    local i = 1
+    e.test.ents = {}
+    --[[
+    for i = 1, 20, 1 do
+        e.test.ents[i] = {} + e.table.copy(e.class.getBase("testPlayer", "engine"))
+        e.test.ents[i].eid = i
+        e.test.ents[i].pos = v(math.random(0, e.vpBounds.x), math.random(0, e.vpBounds.y))
+        e.test.ents[i]:init()
+        print(i)
         
     end
-    
-    love.graphics.setBackgroundColor(180,215,245)
+    e.hook:add("draw", "testPlayerThink"..i, function() 
+        for k,v in pairs(e.test.ents) do
+            v:draw()
+        end
+    end)
+    e.hook:add("update", "testPlayerThink"..i, function() 
+        for k,v in pairs(e.test.ents) do
+            v:think()
+        end
+    end)
+    ]]--
+
 end
 
 function love.resize(x,y)
-    g.vpBounds.x = x
-    g.vpBounds.y = y
-    e.draw.debugCanvas = love.graphics.newCanvas(g.vpBounds.x, g.vpBounds.y, "normal", 0)
+    e.vpBounds.x = x
+    e.vpBounds.y = y
+    e.hook:run("resize", e.vpBounds)
 end
-
+local lineOnce = false
 function love.draw()
-    --draw.drawque()
+    if not lineOnce then
+        love.graphics.setLineStyle("smooth")
+        love.graphics.setLineJoin("none")
+        lineOnce = true
+
+        
+    end
+    
+    love.graphics.setFont(e.fonts.arial18)
     e.hook:run("draw")
+    
+    --[[
+    points = {
+        v(20, 10),
+        love.mouse.getPosition(),
+        v(60, 80),
+    }
+
+    vecs = {
+        points[1]:getVector(points[2]),
+        points[1]:getVector(points[3])
+    }
+    print(Tserial.pack(vecs,"",true))
+    dotProduct = vecs[1]:dotProduct(vecs[2])
+    print(dotProduct)
+        
+    angleBetweenVectors = vecs[1]:angleBetween(vecs[2])
+    print(angleBetweenVectors)
+        
+    projectedDot = vecs[1]:project(vecs[2])
+    print(projectedDot)
+    
+    love.graphics.setColor(128,128,255)
+    e.olLine((points[1].x+vecs[2].x*projectedDot)*1.1, (points[1].y+vecs[2].y*projectedDot)*1.1, points[1].x, points[1].y )
+    
+    love.graphics.setColor(255,0,0)
+    e.olLine(points[1].x, points[1].y, points[1].x+vecs[1].x, points[1].y+vecs[1].y )
+    
+    love.graphics.setColor(0,255,0)
+    e.olLine(points[1].x, points[1].y, points[1].x+vecs[2].x, points[1].y+vecs[2].y )
+    
+    love.graphics.setColor(0,0,255)
+    e.olLine(points[1].x+vecs[2].x*projectedDot, points[1].y+vecs[2].y*projectedDot, points[1].x+vecs[1].x, points[1].y+vecs[1].y )
+    ]]--
 end
 
 function love.update(dt)
@@ -235,10 +333,13 @@ function love.update(dt)
     e.hook:run("update", dt)
     
     if e.console then return false end
-    if love.keyboard.isDown("s") then g.vp.y = g.vp.y-math.floor(g.mspeed*dt) end
-    if love.keyboard.isDown("d") then g.vp.x = g.vp.x-math.floor(g.mspeed*dt) end
-    if love.keyboard.isDown("w") then g.vp.y = g.vp.y+math.floor(g.mspeed*dt) end
-    if love.keyboard.isDown("a") then g.vp.x = g.vp.x+math.floor(g.mspeed*dt) end
+    
+    if love.keyboard.isDown("s") then e.vp.y = e.vp.y-math.floor(e.mspeed*dt) end
+    if love.keyboard.isDown("d") then e.vp.x = e.vp.x-math.floor(e.mspeed*dt) end
+    if love.keyboard.isDown("w") then e.vp.y = e.vp.y+math.floor(e.mspeed*dt) end
+    if love.keyboard.isDown("a") then e.vp.x = e.vp.x+math.floor(e.mspeed*dt) end
+    --print(love.timer.getTime( )%0.1 <= dt)
+    if love.timer.getTime( )%0.05 <= dt then e.theta = e.theta + e.thetaInc end
 end
 
 function love.focus(bool)
@@ -266,34 +367,41 @@ function love.keypressed( key, unicode )
         e.consoleTyping = e.console
         e.consoleText = {}
     end
+    if key == "up" then
+        e.theta = e.theta + 0.5
+    end
+    if key == "down" then
+        e.theta = e.theta - 0.5
+    end
+end
+
+function love.visible(visible)
+    e.doDraw = visible
 end
 
 function love.keyreleased( key, unicode )
-	
 end
 
 function love.mousepressed( x, y, button )
-    if button == "wd" then
+end
+
+function love.wheelmoved( x, y )
+    if y == -1 then
         if (e.consoleLine + 1) >  (#e.print - 10) then return false end
         e.consoleLine = e.consoleLine + 1
     end
-    if button == "wu" then
+    if y == 1 then
         if e.consoleLine - 1 < 0 then return false end
         e.consoleLine = e.consoleLine - 1
     end
 end
 
 function love.mousereleased( x, y, button )
+    e.ui.buttonCatch = false
 end
 
 function love.quit()
-    if love.filesystem.exists("log.txt") ~= true then
-        love.filesystem.write("log.txt", "\n", string.len("\n"))
-    end
-    local str = ""
-    for k,v in pairs(e.print) do 
-        str = str.."\n"..v[1]
-    end
-    love.filesystem.append("log.txt", "\n_______________________________________\n\n"..os.date("%d_%m_%y_%H%M").."\n\n_______________________________________\n\n", str:len())
-    love.filesystem.append("log.txt", str, str:len())
+    print(type(e.print[1]))
+    local str = table.concat(e.print, "\n\r")
+    love.filesystem.append("log_"..os.date("%d%m%y%H%M%S")..math.random(0,99999)..".txt", "\n_______________________________________\n\n"..os.date("%d_%m_%y_%H%M").."\n\n_______________________________________\n\n"..str, str:len())
 end

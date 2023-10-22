@@ -1,4 +1,5 @@
-e.olCirc = love.graphics.circle
+
+e.oldCirc = love.graphics.circle
 function love.graphics.circle(mode, pos, rad)
     
     e.oldCirc(mode, pos.x, pos.y, rad)
@@ -66,7 +67,7 @@ function love.graphics.newQuad(pos, size, sw, sh)
     return e.olnewQuad(pos.x, pos.y, size.x, size.y, sw, sh)
 end
 
-e.olwgetdia = love.window.getDimensions
+e.olwgetdia = love.graphics.getDimensions
 function love.window.getDimensions()
     local sh, sw = e.olwgetdia()
     return Vector(sh, sw)

@@ -1,25 +1,25 @@
 print("Defining string.explode function.")
-e.string = {}
-function e.string.explode(stack, needle)
+local string = {
+    __title = "String library",
+    __description = [[Provides helper functions for the string datatype]],
+    __author = "Connor Day",
+    __version = 1,
+}
 
+function string.explode(stack, needle)
 	if needle == nil then
-	
 		needle = "%S+"
-	
 	end
 	if stack == nil then return "false" end
 	local splitReturn = {}
 	for i in string.gmatch(stack..needle, "([^"..needle.."]+)"..needle.."?")do
-	
 		print(i)
 		table.insert(splitReturn, i)
-	
 	end
 	return splitReturn
-	
 end
 
-function e.string.toSeed(s)
+function string.toSeed(s)
     local trans = {
         ["0"] = 100,
         ["1"] = 1,
@@ -72,3 +72,4 @@ function e.string.toSeed(s)
     return tonumber(tes)
 end
 print("libs.string done.")
+return string

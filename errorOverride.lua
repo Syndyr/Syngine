@@ -34,9 +34,9 @@ function love.errhand(msg)
  
 	local sRGB = select(3, love.window.getMode()).srgb
 	if sRGB and love.math then
-		love.graphics.setBackgroundColor(love.math.gammaToLinear(60, 60, 90))
+		love.graphics.setBackgroundColor(love.math.gammaToLinear(60, 60, 60))
 	else
-		love.graphics.setBackgroundColor(60, 60, 90)
+		love.graphics.setBackgroundColor(90, 60, 60)
 	end
  
 	love.graphics.setColor(255, 255, 255, 255)
