@@ -1,5 +1,6 @@
 local t = {
     __title = "Isometric tile library",
+    __description = "Provides isometric tile rendering",
     __author = "Connor Day",
     __version = 1,
     size = v(128,64),
