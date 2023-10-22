@@ -292,7 +292,7 @@ function love.draw()
     
     love.graphics.setFont(e.fonts.arial18)
     e.hook:run("draw")
-    
+    e.isoTile:testingDraw()
     --[[
     points = {
         v(20, 10),
@@ -326,6 +326,8 @@ function love.draw()
     love.graphics.setColor(0,0,255)
     e.olLine(points[1].x+vecs[2].x*projectedDot, points[1].y+vecs[2].y*projectedDot, points[1].x+vecs[1].x, points[1].y+vecs[1].y )
     ]]--
+    
+    
 end
 
 function love.update(dt)

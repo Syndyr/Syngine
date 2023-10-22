@@ -72,8 +72,8 @@ function drawQue.updateCanvasSizes(w)
             v.canvas = love.graphics.newCanvas(v.size.x, v.size.y)
         end
     end
-    clk(self.que.other, w)
-    clk(self.que.ui, w)
+    clk(drawQue.que.other, w)
+    clk(drawQue.que.ui, w)
 end
 
 function drawQue:init()
