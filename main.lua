@@ -1,7 +1,7 @@
 function love.load()
     require "errorOverride"
     --Override the default Love2D error handler
-    
+
     e = {
         print = {}, 
         _version = "0.1.1-11.4",
