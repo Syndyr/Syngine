@@ -137,7 +137,7 @@ function t:testingDraw()
     local x = math.floor(math.max(0, topLeft.x))
 
     local xLim = math.floor(math.min(#tiles, bottomRight.x))
-    e.oldprint(#tiles, bottomRight.x)
+    --e.oldprint(#tiles, bottomRight.x)
     for x = x, xLim do 
         local yLim = math.floor(math.min(#tiles[x], bottomLeft.y))
         local y = math.floor(math.max(0, topRight.y))
