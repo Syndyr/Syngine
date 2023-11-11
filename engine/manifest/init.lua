@@ -40,6 +40,7 @@ return {
         "tiles/grass",
         "tiles/rock",
         "tiles/water",
+        "tiles/grass_and_water",
         "splashes/syngyn"
     },
     drawables = {
