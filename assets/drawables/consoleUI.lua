@@ -125,8 +125,8 @@ e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)
     love.graphics.setBlendMode("alpha")
     --love.graphics.clear()
     vpBounds = love.window.getDimensions()
-    local yOff = e.fonts.arial18:getHeight(strn)*11
     local strn = ""
+    local yOff = e.fonts.arial18:getHeight(strn)*11
     love.graphics.setFont(e.fonts.arial18)
     love.graphics.setBlendMode("alpha")
     if e.console then
