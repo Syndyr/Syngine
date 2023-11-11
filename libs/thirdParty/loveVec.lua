@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-parameter
 
 e.oldCirc = love.graphics.circle
 function love.graphics.circle(mode, pos, rad)
@@ -22,7 +23,7 @@ end
 e.olLine = love.graphics.line
 function love.graphics.line(vecs)
    
-    e.olLine(packVectorNicely(vecs))
+    --e.olLine(packVectorNicely(vecs))
     
 end
 
@@ -48,7 +49,7 @@ e.olPrintf = love.graphics.printf
 function love.graphics.printf(str, poslim, align, rad)
     if rad == nil then rad = 0 end
     if align == nil then align = "left" end
-    e.olPrintf(str, posli.x, poslim.y, poslim.z, align, rad)
+    e.olPrintf(str, poslim.x, poslim.y, poslim.z, align, rad)
 end
 
 e.olRec = love.graphics.rectangle
