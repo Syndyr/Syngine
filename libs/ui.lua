@@ -69,7 +69,7 @@ function ui:createFrame(name, priority, doDraw, pos, size, upX, upY)
     if doDraw == nil then doDraw = false end
     if upX == nil then upX = false end
     if upY == nil then upY = false end
-    local formatted =  {name = name, catagory = "ui", draw = drawMeta, doDraw = doDraw, pos = pos, size = size, upX = upX, upY = upY}
+    local formatted =  {name = name, catagory = "ui", doDraw = doDraw, pos = pos, size = size, upX = upX, upY = upY}
     formatted = formatted + e.class:getBase("uiFrame", "engine")
     formatted.canvas = e.drawQue:addNew(
         name, 
