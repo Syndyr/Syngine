@@ -80,6 +80,7 @@ function drawQue:init()
     e.hook:add("draw", "e_drawque", function(dt) self:draw(dt) end)
     e.hook:add("resize", "e_updateCanvasSizes", self.updateCanvasSizes)
 end
+
 function drawQue:get(domain, name)
     for k,v in pairs(self.que[domain]) do
         if v.name == name then
@@ -87,15 +88,16 @@ function drawQue:get(domain, name)
         end
     end
 end
-function drawQue:activate(domaine, name)
+
+function drawQue:activate(domain, name)
     self:get(domain, name).doDraw = true
 end
 
-function drawQue:disable(domaine, name)
+function drawQue:disable(domain, name)
     self:get(domain, name).doDraw = false
 end
 
-function drawQue:toggle(domaine, name)
+function drawQue:toggle(domain, name)
     self:get(domain, name).doDraw = not self:get(domain, name).doDraw
 end
 
