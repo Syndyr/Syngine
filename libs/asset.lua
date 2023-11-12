@@ -93,7 +93,7 @@ function asset:load(folder)
             return v
         end, true))
         ]]
-        local dictionary = e.class:getBase("isoTileDictionary", "engine")
+        local dictionary = e.table.copy(e.class:getBase("isoTileDictionary", "engine"))
         dictionary.tiles = tilesTest
         workingAsset.tileDictionary = dictionary
 
