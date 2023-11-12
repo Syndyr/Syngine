@@ -71,7 +71,7 @@ function asset:load(folder)
                     if g ~= "sum" then
 
                         local set = tilesTest[k][b.sum]
-                        local tile = e.class:getBase("isoTile", "engine")
+                        local tile = e.table.copy(e.class:getBase("isoTile", "engine"))
                         tile.mesh = self:parseVertsIntoMesh(d.verts, imageSize, workingAsset.image)
 
                         table.insert( tilesTest[k][b.sum], tile )
