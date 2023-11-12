@@ -135,7 +135,11 @@ function objectData.data.doDrawn()
     return e.console
 end
 function objectData.data.onPress(var)
-    e.oldprint(Tserial.pack(e.asset, "", true))
+    e.oldprint(Tserial.pack(e.asset, 
+    function(v) 
+        local v = type(v) == "string" and v or type(v) 
+        return v
+    end, true))
 end
 frame:add("Button", objectData)
 

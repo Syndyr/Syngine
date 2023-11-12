@@ -3,6 +3,7 @@ return {
     name = "grassAndWaterSheet",
     type = "isoTileSet",
     title = "",
+    baseTile = "water",
     filename = "grass_and_water_modified",
     alpha = true,
     author = "Clint Bellanger",
