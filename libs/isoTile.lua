@@ -45,16 +45,14 @@ function t:getScreenCoordinate(worldCoordinate)
     return worldPos
 end
 
-function t:createTilePositions(xLim, yLim)
+function t:createTilePositions(size)
     
+    local xLim, yLim = size.x, size.y
     local tilePositions = {}
-    local iX = 0
-    local size = self.size
     
     for iX = 0, xLim do
         
         tilePositions[iX] = {}
-        local iY = 0
         
         for iY = 0, yLim do
             
@@ -109,71 +107,6 @@ function t:getTileCoordinateFromScreenPosition(pos)
 
 end
 
-t.testTiles = t:createTilePositions(512,512)
-
-function t:testingDraw()
-    
-    local VPOffset = e.vp
-    local tiles = self.testTiles
-    local tile = self.tileMesh
-
-    local mpos = love.mouse.getPosition()
-    local mposInWorldSpace = self:getWorldCoordinate( mpos)
-            
-    local mx, my = mposInWorldSpace.x, mposInWorldSpace.y
-    local mosTile = self:getTileCoordinateFromScreenPosition( mpos )
-
-    love.graphics.setColor(255,0,0,255)
-
-    local inCullAmount = 0
-    local bottomRight = self:getTileCoordinateFromScreenPosition(v(love.graphics.getDimensions() )) - inCullAmount
-    local bottomLeft = self:getTileCoordinateFromScreenPosition(v(love.graphics.getDimensions() ) * v(0,1)) - inCullAmount
-    local topRight = self:getTileCoordinateFromScreenPosition(v(love.graphics.getDimensions() ) * v(1,0)) + inCullAmount
-    local topLeft = self:getTileCoordinateFromScreenPosition(v()) + inCullAmount
-
-
-    e.olgPrint(mosTile.x..","..mosTile.y, mpos.x, mpos.y-20)
-    
-    local x = math.floor(math.max(0, topLeft.x))
-
-    local xLim = math.floor(math.min(#tiles, bottomRight.x))
-    --e.oldprint(#tiles, bottomRight.x)
-    for x = x, xLim do 
-        local yLim = math.floor(math.min(#tiles[x], bottomLeft.y))
-        local y = math.floor(math.max(0, topRight.y))
-
-        for y=y, yLim do
-            
-            love.graphics.setColor(255,255,255,20)
-            
-            
-            if math.floor(mosTile.x) == x and math.floor(mosTile.y) == y then love.graphics.setColor(255,0,0,20) end 
-            
-            local pos = tiles[x][y] * self.size
-            e.olDraw(tile, pos.x+VPOffset.x, pos.y+VPOffset.y)
-
-        end
-
-    end 
-    --[[
-    for k,v in pairs(tiles) do
-        
-        for n,b in pairs(v) do
-            
-            love.graphics.setColor(255,255,255,20)
-            
-            
-            if math.floor(mosTile.x) == k and math.floor(mosTile.y) == n then love.graphics.setColor(255,0,0,20) end 
-            
-            local pos = b * self.size
-            e.olDraw(tile, pos.x+VPOffset.x, pos.y+VPOffset.y)
-            
-            
-        end
-        
-    end
-    ]]--
-    
-end
+--t.testTiles = t:createTilePositions(512,512)
 
 return t

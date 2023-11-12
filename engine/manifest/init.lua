@@ -32,7 +32,8 @@ return {
         {"drawable", "engine"},
         {"uiFrame", "engine"},
         {"testPlayer", "engine"},
-        {"isoTile", "engine"}
+        {"isoTileMap", "engine"},
+        {"isoTileDictionary", "engine"}
     },
     assets = {
         "tiles/noTex",

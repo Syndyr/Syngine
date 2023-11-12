@@ -261,11 +261,7 @@ function love.load()
         print(i)
         
     end
-    e.hook:add("draw", "testPlayerThink"..i, function() 
-        for k,v in pairs(e.test.ents) do
-            v:draw()
-        end
-    end)
+    
     e.hook:add("update", "testPlayerThink"..i, function() 
         for k,v in pairs(e.test.ents) do
             v:think()
@@ -273,6 +269,15 @@ function love.load()
     end)
     ]]--
 
+    e.test.isoTest = e.class:getBase("isoTileMap", "engine")
+
+    e.test.isoTest.tileDictionary = e.asset:get("isoTileSet", "grassAndWaterSheet")
+
+    e.test.isoTest:makeNewTileMap(nil, v(64,64))
+
+    e.hook:add("e_drawCallAux", "testIsoDraw"..i, function() 
+        e.test.isoTest:draw(dt)
+    end)
 end
 
 function love.resize(x,y)
@@ -291,8 +296,10 @@ function love.draw()
     end
     
     love.graphics.setFont(e.fonts.arial18)
+    
     e.hook:run("draw")
-    e.isoTile:testingDraw()
+    
+    
     --[[
     points = {
         v(20, 10),
