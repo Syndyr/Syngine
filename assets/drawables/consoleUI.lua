@@ -119,6 +119,25 @@ function objectData.data.setVar(var)
 end
 frame:add("Slider", objectData)
 
+objectData = {
+    centered = false, 
+    pos = v(0,164),
+    size = v(140, 30),
+    data = {
+        limits = {0, 1000},
+        hasSet = true
+    }
+}
+function objectData.data.value()
+    return "Print assets"
+end
+function objectData.data.doDrawn()
+    return e.console
+end
+function objectData.data.onPress(var)
+    e.oldprint(Tserial.pack(e.asset, "", true))
+end
+frame:add("Button", objectData)
 
 
 e.drawQue:addNew("e_consoleUI", "ui", 0, function(dt)

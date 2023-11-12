@@ -30,13 +30,27 @@ function asset:load(folder)
         --tileDictionary = tileSet
         asset.image = love.graphics.newImage("assets/"..folder.."/images/"..asset.filename..".png")
         local tiles = {}
-
+        local imageSize = Vector(asset.image:getDimensions())
         local function parseVertsIntoMesh(verts, imageDimensions)
-            local normalisedVerticies = {}
+            local mesh = {}
+            local box = {
+                {0,0},
+                {128,0},
+                {128,128},
+                {0,128}
+            }
             for k,d in pairs(verts) do
-                local vec = v(d[1], v[2]) / imageDimensions
+                
+                if k ~= "offset" then
+                    local point = box[k]
+                    local vec = v(d[1], d[2]) / imageDimensions
+                    mesh[#mesh+1] = {point[1], point[2], vec.x, vec.y}
+                end
 
             end
+
+            return love.graphics.newMesh(mesh, "fan", "static")
+
         end
 
         for k,v in pairs(tileSet) do
@@ -45,12 +59,27 @@ function asset:load(folder)
             for n,b in pairs(v) do
                 
                 tiles[k][b.sum] = {}
-                
+                for g,d in pairs(b) do
 
+                    if g ~= "sum" then
+
+                        local set = tiles[k][b.sum]
+                        local tile = e.class:getBase("isoTile", "engine")
+                        tile.mesh = parseVertsIntoMesh(d.verts, imageSize)
+                        table.insert( set, tile )
+
+                    end
+                end
             end
-
         end
-        self.assets.isoTileSet[asset.name] = asset
+        
+        local dictionary = e.class:getBase("isoTileDictionary", "engine")
+
+        dictionary.tiles = tiles
+        dictionary.image = asset.image
+        
+        --print(Tserial.pack(tiles, "", true))
+        self.assets.isoTileSet[asset.name] = dictionary
     elseif asset.type == "audio" then
         base = e.class:getBase("engine", "audio")
     elseif asset.type == "save" then
